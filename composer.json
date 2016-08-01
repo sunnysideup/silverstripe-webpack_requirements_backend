@@ -1,7 +1,7 @@
 {
     "name": "sunnysideup/webpack_requirements_backend",
     "type": "silverstripe-module",
-    "description": "Provides an alternative to the standard Silvertripe Requirements Backend class so that your application can run webpack.",
+    "description": "Silverstripe Module that provides an alternative to the standard Silvertripe Requirements Backend class so that your application can run webpack.",
     "keywords": ["requirements", "webpack", "javascript", "theme-ing", "css", "back-end", "front-end", "npm", "module bundler"],
     "license": "Sunny Side Up (BSD-3-Clause and CUSTOM)",
     "authors":[
