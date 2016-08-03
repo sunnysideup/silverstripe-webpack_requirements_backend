@@ -43,6 +43,18 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend {
     public static function set_copy_js_to_folder($string) {self::$copy_js_to_folder = $string;}
 
     /**
+     * @ var string
+     */
+    private static $urls_to_exclude = "themes/base/source/js/requirements";
+
+    /**
+     * we need this method because Requirements_Backend does not extend Object!
+     * @param array $array
+     */
+    public static function set_urls_to_exclude($array) {self::$urls_to_exclude = $array;}
+    public static function get_urls_to_exclude(){return self::$urls_to_exclude = $array;}
+
+    /**
      * @ var bool
      */
     private static $force_update = true;
