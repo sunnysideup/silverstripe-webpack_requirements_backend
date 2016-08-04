@@ -45,7 +45,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend {
     /**
      * @ var string
      */
-    private static $urls_to_exclude = "themes/base/source/js/requirements";
+    private static $urls_to_exclude = array();
 
     /**
      * we need this method because Requirements_Backend does not extend Object!
