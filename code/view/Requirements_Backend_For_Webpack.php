@@ -166,6 +166,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend {
 
                 //copy files ...
                 if($this->canSaveRequirements()) {
+
                     //css
                     $cssFolder = self::$copy_css_to_folder;
 
