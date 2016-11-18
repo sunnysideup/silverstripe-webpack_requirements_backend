@@ -163,9 +163,9 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend {
 
                 //end copy-ish from parent class
                 //=====================================================================
-
                 //copy files ...
                 if($this->canSaveRequirements()) {
+
                     //css
                     $cssFolder = self::$copy_css_to_folder;
 
@@ -235,6 +235,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend {
 
     protected function moveFileToRequirementsFolder($fileLocation, $folderLocation)
     {
+
         $base = Director::baseFolder()."/";
         $folderLocation = $base.$folderLocation;
         Filesystem::makeFolder($folderLocation);
@@ -254,6 +255,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend {
             }
         }
         else {
+
             $from = $base.$fileLocation;
             $to = $folderLocation."/".basename($fileLocation);
             if(in_array($fileLocation, self::$files_to_ignore)) {
