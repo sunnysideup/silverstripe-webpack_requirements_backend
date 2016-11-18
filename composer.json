@@ -3,6 +3,9 @@
     "type": "silverstripe-module",
     "description": "Silverstripe Module that provides an alternative to the standard Silvertripe Requirements Backend class so that your application can run webpack.",
     "keywords": [
+        "Silverstripe-CMS",
+        "CMS",
+        "Silverstripe",
         "requirements",
         "webpack",
         "javascript",
@@ -22,7 +25,8 @@
         }
     ],
     "require": {
-        "silverstripe/framework": "^3.4"
+        "silverstripe/framework": "~3.1",
+        "silverstripe/cms": "~3.1"
     },
     "extra": {
         "installer-name": "webpack_requirements_backend"

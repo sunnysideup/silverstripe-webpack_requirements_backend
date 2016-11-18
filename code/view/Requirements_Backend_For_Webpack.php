@@ -5,7 +5,8 @@
  *
  *
  */
-class Requirements_Backend_For_Webpack extends Requirements_Backend {
+class Requirements_Backend_For_Webpack extends Requirements_Backend
+{
 
 
     /**
@@ -18,7 +19,10 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend {
      * we need this method because Requirements_Backend does not extend Object!
      * @param array $array
      */
-    public static function set_files_to_ignore($array) {self::$files_to_ignore = $array;}
+    public static function set_files_to_ignore($array)
+    {
+        self::$files_to_ignore = $array;
+    }
 
     /**
      * @ var string
@@ -29,7 +33,10 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend {
      * we need this method because Requirements_Backend does not extend Object!
      * @param string $string
      */
-    public static function set_copy_css_to_folder($string) {self::$copy_css_to_folder = $string;}
+    public static function set_copy_css_to_folder($string)
+    {
+        self::$copy_css_to_folder = $string;
+    }
 
     /**
      * @ var string
@@ -40,7 +47,10 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend {
      * we need this method because Requirements_Backend does not extend Object!
      * @param string $string
      */
-    public static function set_copy_js_to_folder($string) {self::$copy_js_to_folder = $string;}
+    public static function set_copy_js_to_folder($string)
+    {
+        self::$copy_js_to_folder = $string;
+    }
 
     /**
      * @ var string
@@ -51,15 +61,27 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend {
      * we need this method because Requirements_Backend does not extend Object!
      * @param array $array
      */
-    public static function set_urls_to_exclude($a) {self::$urls_to_exclude = $a;}
-    public static function get_urls_to_exclude() {return self::$urls_to_exclude;}
+    public static function set_urls_to_exclude($a)
+    {
+        self::$urls_to_exclude = $a;
+    }
+    public static function get_urls_to_exclude()
+    {
+        return self::$urls_to_exclude;
+    }
 
     /**
      * @ var bool
      */
     private static $force_update = true;
-    public static function set_force_update($bool) {self::$force_update = $bool;}
-    public static function get_force_update($bool) {return self::$force_update;}
+    public static function set_force_update($bool)
+    {
+        self::$force_update = $bool;
+    }
+    public static function get_force_update($bool)
+    {
+        return self::$force_update;
+    }
 
     /**
      * Whether to add caching query params to the requests for file-based requirements.
@@ -96,13 +118,14 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend {
      *                             through {@link SSViewer}
      * @return string HTML content augmented with the requirements tags
      */
-    public function includeInHTML($templateFile, $content) {
-        if($this->themedRequest()) {
+    public function includeInHTML($templateFile, $content)
+    {
+        if ($this->themedRequest()) {
 
             //=====================================================================
             // start copy-ish from parent class
 
-            if(
+            if (
                 (strpos($content, '</head>') !== false || strpos($content, '</head ') !== false)
                 && ($this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags)
             ) {
@@ -114,28 +137,28 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend {
                 // Combine files - updates $this->javascript and $this->css
                 $this->process_combined_files();
 
-                if(Director::isDev()) {
-                    foreach(array_diff_key($this->javascript,$this->blocked) as $file => $dummy) {
+                if (Director::isDev()) {
+                    foreach (array_diff_key($this->javascript, $this->blocked) as $file => $dummy) {
                         $path = Convert::raw2xml($this->path_for_file($file));
-                        if($path) {
+                        if ($path) {
                             $requirementsJSFiles[$path] = $path;
                         }
                     }
                 }
 
                 // Add all inline JavaScript *after* including external files they might rely on
-                if($this->customScript) {
-                    foreach(array_diff_key($this->customScript,$this->blocked) as $script) {
+                if ($this->customScript) {
+                    foreach (array_diff_key($this->customScript, $this->blocked) as $script) {
                         $jsRequirements .= "<script type=\"text/javascript\">\n//<![CDATA[\n";
                         $jsRequirements .= "$script\n";
                         $jsRequirements .= "\n//]]>\n</script>\n";
                     }
                 }
 
-                if(Director::isDev()) {
-                    foreach(array_diff_key($this->css,$this->blocked) as $file => $params) {
+                if (Director::isDev()) {
+                    foreach (array_diff_key($this->css, $this->blocked) as $file => $params) {
                         $path = Convert::raw2xml($this->path_for_file($file));
-                        if($path) {
+                        if ($path) {
                             $media = (isset($params['media']) && !empty($params['media']))
                                 ? " media=\"{$params['media']}\"" : "";
                             $requirementsCSSFiles[$path."_".$media] = $path;
@@ -143,11 +166,11 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend {
                     }
                 }
 
-                foreach(array_diff_key($this->customCSS, $this->blocked) as $css) {
+                foreach (array_diff_key($this->customCSS, $this->blocked) as $css) {
                     $requirements .= "<style type=\"text/css\">\n$css\n</style>\n";
                 }
 
-                foreach(array_diff_key($this->customHeadTags,$this->blocked) as $customHeadTag) {
+                foreach (array_diff_key($this->customHeadTags, $this->blocked) as $customHeadTag) {
                     $requirements .= "$customHeadTag\n";
                 }
 
@@ -163,26 +186,25 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend {
 
                 //end copy-ish from parent class
                 //=====================================================================
+
                 //copy files ...
-                if($this->canSaveRequirements()) {
+                if ($this->canSaveRequirements()) {
 
                     //css
                     $cssFolder = self::$copy_css_to_folder;
 
-                    foreach($requirementsCSSFiles as $cssFile) {
+                    foreach ($requirementsCSSFiles as $cssFile) {
                         $this->moveFileToRequirementsFolder($cssFile, $cssFolder);
                     }
                     //js
                     $jsFolder = self::$copy_js_to_folder;
-                    foreach($requirementsJSFiles as $jsFile) {
+                    foreach ($requirementsJSFiles as $jsFile) {
                         $this->moveFileToRequirementsFolder($jsFile, $jsFolder);
-
                     }
                 }
             }
             return $content;
-        }
-        else {
+        } else {
             return parent::includeInHTML($templateFile, $content);
         }
     }
@@ -195,10 +217,9 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend {
      */
     public function include_in_response(SS_HTTPResponse $response)
     {
-        if($this->themedRequest()) {
+        if ($this->themedRequest()) {
             //do nothing
-        }
-        else {
+        } else {
             return parent::include_in_response($response);
         }
         //$this->process_combined_files();
@@ -213,10 +234,10 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend {
      */
     protected function canSaveRequirements()
     {
-        if(Director::isDev()) {
-            if($this->themedRequest()) {
+        if (Director::isDev()) {
+            if ($this->themedRequest()) {
                 $socket = @fsockopen('localhost', 3000, $errno, $errstr, 1);
-                if($socket) {
+                if ($socket) {
                     return true;
                 }
             }
@@ -235,40 +256,33 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend {
 
     protected function moveFileToRequirementsFolder($fileLocation, $folderLocation)
     {
-
         $base = Director::baseFolder()."/";
         $folderLocation = $base.$folderLocation;
         Filesystem::makeFolder($folderLocation);
-        if(!file_exists($folderLocation)) {
+        if (!file_exists($folderLocation)) {
             user_error('Please update Requirements_Backend_For_Webpack for the right folder or create '.$folderLocation);
         }
-        if(strpos($fileLocation, "//") !== false) {
+        if (strpos($fileLocation, "//") !== false) {
             $to = $folderLocation."/EXTERNALS.README";
             $lines = array();
-            if(file_exists($to)) {
+            if (file_exists($to)) {
                 $lines = file($to);
             }
-            if( ! in_array($fileLocation, $lines)) {
+            if (! in_array($fileLocation, $lines)) {
                 $handle = fopen($to, 'a');
                 $data = $_SERVER['REQUEST_URI']." | ".$fileLocation."\n";
                 fwrite($handle, $data);
             }
-        }
-        else {
-
+        } else {
             $from = $base.$fileLocation;
             $to = $folderLocation."/".basename($fileLocation);
-            if(in_array($fileLocation, self::$files_to_ignore)) {
+            if (in_array($fileLocation, self::$files_to_ignore)) {
                 //to be completed ...
-            }
-            else {
-                if( ! file_exists($to) || self::$force_update) {
+            } else {
+                if (! file_exists($to) || self::$force_update) {
                     copy($from, $to);
                 }
             }
         }
-
     }
-
-
 }
