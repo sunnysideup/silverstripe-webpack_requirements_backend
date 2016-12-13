@@ -263,19 +263,29 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend
             user_error('Please update Requirements_Backend_For_Webpack for the right folder or create '.$folderLocation);
         }
         if (strpos($fileLocation, "//") !== false) {
-            $to = $folderLocation."/EXTERNALS.README";
+            $logFile = $folderLocation."/EXTERNALS.README";
             $lines = array();
-            if (file_exists($to)) {
-                $lines = file($to);
+            $line = $_SERVER['REQUEST_URI']." | ".$fileLocation."\n";
+            if (file_exists($logFile)) {
+                $lines = file($logFile);
             }
             if (! in_array($fileLocation, $lines)) {
-                $handle = fopen($to, 'a');
-                $data = $_SERVER['REQUEST_URI']." | ".$fileLocation."\n";
-                fwrite($handle, $data);
+                $handle = fopen($logFile, 'a');
+                fwrite($handle, $line);
             }
         } else {
             $from = $base.$fileLocation;
             $to = $folderLocation."/".basename($fileLocation);
+            $logFile = $folderLocation."/INTERNALS.README";
+            $lines = array();
+            $line = '"cp '.$from.' '.$to.'",'."\n";
+            if (file_exists($to)) {
+                $lines = file($logFile);
+            }
+            if (! in_array($line, $lines)) {
+                $handle = fopen($logFile, 'a');
+                fwrite($handle, $line);
+            }
             if (in_array($fileLocation, self::$files_to_ignore)) {
                 //to be completed ...
             } else {
