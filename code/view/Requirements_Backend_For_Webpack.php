@@ -256,14 +256,14 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend
 
     protected function moveFileToRequirementsFolder($fileLocation, $folderLocation)
     {
-        $base = Director::baseFolder()."/";
-        $folderLocation = $base.$folderLocation;
-        Filesystem::makeFolder($folderLocation);
-        if (!file_exists($folderLocation)) {
-            user_error('Please update Requirements_Backend_For_Webpack for the right folder or create '.$folderLocation);
+        $base = Director::baseFolder();
+        $folderLocationWithBase = $base.'/'.$folderLocation;
+        Filesystem::makeFolder($folderLocationWithBase);
+        if (!file_exists($folderLocationWithBase)) {
+            user_error('Please update Requirements_Backend_For_Webpack for the right folder or create '.$folderLocationWithBase);
         }
         if (strpos($fileLocation, "//") !== false) {
-            $logFile = $folderLocation."/EXTERNALS.README";
+            $logFile = $folderLocationWithBase."/EXTERNALS.log";
             $lines = array();
             $line = $_SERVER['REQUEST_URI']." | ".$fileLocation."\n";
             if (file_exists($logFile)) {
@@ -274,12 +274,14 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend
                 fwrite($handle, $line);
             }
         } else {
-            $from = $base.$fileLocation;
-            $to = $folderLocation."/".basename($fileLocation);
-            $logFile = $folderLocation."/INTERNALS.README";
+            $from = $fileLocation;
+            $to = basename($fileLocation);
+            $line = '"cp .'.$from.' ./'.$folderLocation.$to.'",'."\n";
+            $from = $base.$from;
+            $to = $folderLocationWithBase.'/'.$to;
+            $logFile = $folderLocationWithBase."/TO.INCLUDE.IN.COMPOSER.log";
             $lines = array();
-            $line = '"cp '.$from.' '.$to.'",'."\n";
-            if (file_exists($to)) {
+            if (file_exists($logFile)) {
                 $lines = file($logFile);
             }
             if (! in_array($line, $lines)) {
