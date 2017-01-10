@@ -1,33 +1,72 @@
-# Webpack Requirements Backend
+# Silverstripe webpack requirements backend module
+[![Build Status](https://travis-ci.org/sunnysideup/silverstripe-webpack_requirements_backend.svg?branch=master)](https://travis-ci.org/sunnysideup/silverstripe-webpack_requirements_backend)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/sunnysideup/silverstripe-webpack_requirements_backend/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/sunnysideup/silverstripe-webpack_requirements_backend/?branch=master)
+[![codecov.io](https://codecov.io/github/sunnysideup/silverstripe-webpack_requirements_backend/coverage.svg?branch=master)](https://codecov.io/github/sunnysideup/silverstripe-webpack_requirements_backend?branch=master)
+![helpfulrobot](https://helpfulrobot.io/sunnysideup/webpack_requirements_backend/badge)
 
-This module refines the Requirements class for Silverstripe. It moves all your CSS and JS requirements into one folder for easy inclusion via webpack. 
-
-## install
-
-Install this module using composer (or your preferred method).
-
-use:
-
-```php
-<?php
-Requirements_Backend_For_Webpack::set_copy_css_to_folder("themes/base/source/css/requirements");
-Requirements_Backend_For_Webpack::set_copy_js_to_folder("themes/base/source/js/requirements");
-
- ```
-to set the folders where the required files are saved.
-
-Then, as you browse through the website, required files will be saved on those folders.
-
-### careful ...
-_*DO NOT CHANGE THE FILES IN THESE REQUIREMENTS FOLDERS AS THEY WILL BE OVERRITTEN BY NEW VERSIONS FROM THE MODULES / REGULAR THEME FOLDERS*_
+[![Latest Stable Version](https://poser.pugx.org/sunnysideup/webpack_requirements_backend/version)](https://packagist.org/packages/sunnysideup/webpack_requirements_backend)
+[![License](https://poser.pugx.org/sunnysideup/webpack_requirements_backend/license)](https://packagist.org/packages/sunnysideup/webpack_requirements_backend)
+[![Monthly Downloads](https://poser.pugx.org/sunnysideup/webpack_requirements_backend/d/monthly)](https://packagist.org/packages/sunnysideup/webpack_requirements_backend)
 
 
-## usage
+## Documentation
 
-The `customScripts` and `customCSS` calls work as normal. On the other hand, any css files included are copied to a special directory (for inclusion in a `webpack`) instead of being included in the HTML output.
 
-You can go through this requirements folder and pick the CSS and JS you would like to include in your `webpack` using the standard webpack methodologies.
 
-If you would like to change any CSS / JS then please change the original files only. 
+ * [Developer Docs](docs/en/INDEX.md)
+ * [User Guide](docs/en/userguide.md)
+ * [API](http://ssmods.com/apis/webpack_requirements_backend/docs/en/api/)
 
-External requirements are written to a `requirements file` called `requirements` in the same folder to give you greater flexibility on how to manage these. 
+## Requirements
+
+
+
+see [composer.json](composer.json) for details
+
+### Suggested Modules
+
+
+
+see [composer.json](composer.json) for details
+
+
+## Installation
+
+
+```
+composer require sunnysideup/webpack_requirements_backend
+```
+
+### Configuration
+
+
+
+In the `_config` folder you will find the `webpack_requirements_backend.yml.example`
+file that shows options for the configuration of this module.
+
+We recommend that you:
+
+  1. copy these `webpack_requirements_backend.yml.example` files into your
+`mysite/_config` folder
+  2. remove the .example extension
+  3. delete the lines you not care about, and
+  4. adjust the configurations that you would like to use.
+
+
+## Contributing
+
+
+
+We welcome any contributions. See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
+
+## Paid assistance
+
+
+
+You can pay us to create an improved / adapted version of this module for your own projects.  Please contact us if you like to find out more: [www.sunnysideup.co.nz](http://www.sunnysideup.co.nz)
+
+## Author
+
+
+
+Sunny Side Up Ltd.
