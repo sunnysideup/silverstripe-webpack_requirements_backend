@@ -15,7 +15,7 @@
 
  * [Developer Docs](docs/en/INDEX.md)
  * [User Guide](docs/en/userguide.md)
- * [API Docs](http://docs.ssmods.com/sunnysideup/webpack_requirements_backend)
+ * [API Docs](http://docs.ssmods.com/sunnysideup/webpack_requirements_backend/classes.xhtml)
 
 ## Requirements
 
