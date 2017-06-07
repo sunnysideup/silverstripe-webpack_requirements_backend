@@ -27,7 +27,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend
     /**
      * @ var string
      */
-    private static $copy_css_to_folder = "themes/base/source/css/requirements";
+    private static $copy_css_to_folder = "source/css/requirements";
 
     /**
      * we need this method because Requirements_Backend does not extend Object!
@@ -41,7 +41,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend
     /**
      * @ var string
      */
-    private static $copy_js_to_folder = "themes/base/source/js/requirements";
+    private static $copy_js_to_folder = "source/js/requirements";
 
     /**
      * we need this method because Requirements_Backend does not extend Object!
@@ -191,13 +191,13 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend
                 if ($this->canSaveRequirements()) {
 
                     //css
-                    $cssFolder = self::$copy_css_to_folder;
+                    $cssFolder = '/themes/'.SSViewer::current_theme().'/'.self::$copy_css_to_folder;
 
                     foreach ($requirementsCSSFiles as $cssFile) {
                         $this->moveFileToRequirementsFolder($cssFile, $cssFolder);
                     }
                     //js
-                    $jsFolder = self::$copy_js_to_folder;
+                    $jsFolder = '/themes/'.SSViewer::current_theme().'/'.self::$copy_js_to_folder;
                     foreach ($requirementsJSFiles as $jsFile) {
                         $this->moveFileToRequirementsFolder($jsFile, $jsFolder);
                     }
