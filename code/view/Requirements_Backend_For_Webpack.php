@@ -257,7 +257,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend
     protected function moveFileToRequirementsFolder($fileLocation, $folderLocation)
     {
         $base = Director::baseFolder();
-        $folderLocationWithBase = $base.'/'.$folderLocation;
+        $folderLocationWithBase = $base . $folderLocation;
         Filesystem::makeFolder($folderLocationWithBase);
         if (!file_exists($folderLocationWithBase)) {
             user_error('Please update Requirements_Backend_For_Webpack for the right folder or create '.$folderLocationWithBase);
@@ -276,9 +276,9 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend
         } else {
             $from = $fileLocation;
             $to = basename($fileLocation);
-            $line = '"cp .'.$from.' ./'.$folderLocation.$to.'",'."\n";
+            $line = '"cp .'.$from.' .'.$folderLocation.$to.'",'."\n";
             $from = $base.$from;
-            $to = $folderLocationWithBase.'/'.$to;
+            $to = $folderLocationWithBase . '/' . $to;
             $logFile = $folderLocationWithBase."/TO.INCLUDE.IN.COMPOSER.log";
             $lines = array();
             if (file_exists($logFile)) {
