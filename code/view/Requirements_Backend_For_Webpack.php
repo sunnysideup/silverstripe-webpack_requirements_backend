@@ -1,7 +1,9 @@
 <?php
 
 /**
- *
+ * Requirements_Backend_For_Webpack::set_files_to_ignore(
+ *  'mysite/javascript/myfile.js';
+ * );
  *
  *
  */
