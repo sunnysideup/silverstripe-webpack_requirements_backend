@@ -136,11 +136,17 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend
                 // Combine files - updates $this->javascript and $this->css
                 $this->process_combined_files();
                 $isDev = Director::isDev();
-                if ($isDev) {
-                    foreach (array_diff_key($this->javascript, $this->blocked) as $file => $dummy) {
+                foreach (array_diff_key($this->javascript, $this->blocked) as $file => $dummy) {
+                    $ignore = in_array($file, self::$files_to_ignore) ? true : false;
+                    if($isDev || $ignore) {
                         $path = Convert::raw2xml($this->path_for_file($file));
                         if ($path) {
-                            $requirementsJSFiles[$path] = $path;
+                            if ($isDev) {
+                                $requirementsJSFiles[$path] = $path;
+                            }
+                            if(in_array($file, self::$files_to_ignore)) {
+                                $jsRequirements .= "<script type=\"text/javascript\" src=\"$path\"></script>\n";
+                            }
                         }
                     }
                 }
@@ -154,13 +160,21 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend
                     }
                 }
 
-                if ($isDev) {
-                    foreach (array_diff_key($this->css, $this->blocked) as $file => $params) {
+                foreach (array_diff_key($this->css, $this->blocked) as $file => $params) {
+                    $ignore = in_array($file, self::$files_to_ignore) ? true : false;
+                    if($isDev || $ignore) {
                         $path = Convert::raw2xml($this->path_for_file($file));
                         if ($path) {
-                            $media = (isset($params['media']) && !empty($params['media']))
-                                ? " media=\"{$params['media']}\"" : "";
-                            $requirementsCSSFiles[$path."_".$media] = $path;
+                            $media = (isset($params['media']) && !empty($params['media'])) ? $params['media'] : "";
+                            if ($isDev) {
+                                $requirementsCSSFiles[$path."_".$media] = $path;
+                            }
+                            if($ignore) {
+                                if($media !== '') {
+                                    $media = " media=\"{$media}\"";
+                                }
+                                $requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$path\" />\n";
+                            }
                         }
                     }
                 }
