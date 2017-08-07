@@ -1,3 +1,2 @@
 ContentController:
-    extensions:
-      - WebpackPageControllerExtension
+    extensions: [WebpackPageControllerExtension]
