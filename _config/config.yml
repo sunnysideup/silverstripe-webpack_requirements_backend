@@ -1,2 +1,8 @@
+Name: webpack_requirements_backend:
+---
+
+
+
 ContentController:
-    extensions: [WebpackPageControllerExtension]
+    extensions:
+      - WebpackPageControllerExtension

@@ -1,3 +1,7 @@
 <?php
 
-Requirements::set_backend(new Requirements_Backend_For_Webpack());
+if(defined('webpack_requirements_backend_on')) {
+    //do nothing
+} else {
+    Requirements::set_backend(new Requirements_Backend_For_Webpack());
+}
