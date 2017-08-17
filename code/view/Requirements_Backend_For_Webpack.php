@@ -289,9 +289,8 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend
             if (file_exists($logFile)) {
                 $lines = file($logFile);
             }
-            if (! in_array($fileLocation, $lines)) {
-                $handle = fopen($logFile, 'a');
-                fwrite($handle, $line);
+            if (! in_array($line, $lines)) {
+                $this->addLinesToFile($logFile, $fileLocation);
             }
         } else {
             $from = $fileLocation;
@@ -305,8 +304,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend
                 $lines = file($logFile);
             }
             if (! in_array($line, $lines)) {
-                $handle = fopen($logFile, 'a');
-                fwrite($handle, $line);
+                $this->addLinesToFile($logFile, $line);
             }
             if (in_array($fileLocation, self::$files_to_ignore)) {
                 //to be completed ...
@@ -316,5 +314,43 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend
                 }
             }
         }
+    }
+
+    protected $addLinesToFileCount = 0;
+
+    protected function copyIfYouCan($from, $to)
+    {
+        try {
+            copy($from, $to);
+        }
+        catch(Exception $e) {
+            $this->makeFolderWritable();
+            $this->copyIfYouCan($from, $to);
+        }
+    }
+
+    protected function addLinesToFile($fileLocation, $line)
+    {
+        try {
+            $handle = fopen($fileLocation, 'a');
+            fwrite($handle, $line);
+        }
+        catch(Exception $e) {
+            $this->makeFolderWritable();
+            $this->addLinesToFile($fileLocation, $lines);
+        }
+    }
+
+    protected function makeFolderWritable($fileLocation)
+    {
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(dirname($fileLocation)));
+        foreach($iterator as $item) {
+            chmod($item, '0775');
+            chown($item, 'www-data:www-data');
+        }
+        if($this->addLinesToFileCount < 3) {
+            $this->addLinesToFileCount++;
+        }
+
     }
 }
