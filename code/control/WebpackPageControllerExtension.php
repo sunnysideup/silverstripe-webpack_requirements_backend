@@ -4,6 +4,8 @@
 class WebpackPageControllerExtension extends extension
 {
 
+    private static $webpack_enabled_themes = [];
+
     private static $port_for_webpack = 3000;
 
     /**
