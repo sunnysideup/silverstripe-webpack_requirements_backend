@@ -4,9 +4,24 @@
 class WebpackPageControllerExtension extends extension
 {
 
+    /**
+     *
+     * @var {Array}
+     */
     private static $webpack_enabled_themes = [];
 
-    private static $port_for_webpack = 3000;
+    /**
+     *
+     * @var int
+     */
+    private static $webpack_port = 3000;
+
+
+    /**
+     *
+     * @var string
+     */
+    private static $webpack_distribution_folder_extension = 'dist';
 
     /**
      *
@@ -25,7 +40,7 @@ class WebpackPageControllerExtension extends extension
     public function IsWebpackDevServer()
     {
         if (Director::isDev()) {
-            $socket = @fsockopen('localhost', $this->owner->Config()->get('port_for_webpack'), $errno, $errstr, 1);
+            $socket = @fsockopen('localhost', $this->owner->Config()->get('webpack_port'), $errno, $errstr, 1);
             return !$socket ? false : true;
         }
     }
@@ -39,9 +54,14 @@ class WebpackPageControllerExtension extends extension
     {
         $str = Director::AbsoluteBaseURL('/');
         if($this->IsWebpackDevServer()) {
-            $str = rtrim($str, '/') .':'.$this->owner->Config()->get('port_for_webpack').'/';
+            $str = rtrim($str, '/') .':'.$this->owner->Config()->get('webpack_port').'/';
         }
 
         return $str;
+    }
+
+    public function WebpackDistributionFolderExtension()
+    {
+        return $this->owner->Config()->get('webpack_distribution_folder_extension');
     }
 }

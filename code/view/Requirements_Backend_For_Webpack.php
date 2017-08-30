@@ -7,19 +7,33 @@
  *
  *
  */
-class Requirements_Backend_For_Webpack extends Requirements_Backend
+class Requirements_Backend_For_Webpack extends Requirements_Backend implements flushable
 {
 
 
     /**
+     * @var string
+     */
+    private static $webpack_variables_file_location = 'themes/webpack-variables.js';
+
+    /**
+     * we need this method because Requirements_Backend does not extend Object!
+     * @param string
+     */
+    public static function set_webpack_variables_file_location($str)
+    {
+        self::$webpack_variables_file_location = $tr;
+    }
+
+    /**
      * e.g. /mysite/javascript/test.js
-     * @ var array
+     * @var array
      */
     private static $files_to_ignore = array();
 
     /**
      * we need this method because Requirements_Backend does not extend Object!
-     * @param array $array
+     * @var array $array
      */
     public static function set_files_to_ignore($array)
     {
@@ -27,18 +41,45 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend
     }
 
     /**
-     * @ var string
+     * @return array
+     */
+    public static function get_files_to_ignore()
+    {
+        return self::$files_to_ignore = $array;
+    }
+
+    /**
+     * @var string
      */
     private static $working_theme_folder_extension = "_mysite";
 
     /**
-     * @ var string
+     * we need this method because Requirements_Backend does not extend Object!
+     * @var string $string
+     */
+    public static function set_working_theme_folder_extension($string)
+    {
+        self::$working_theme_folder_extension = $string;
+    }
+
+
+    /**
+     * we need this method because Requirements_Backend does not extend Object!
+     * @return string
+     */
+    public static function get_working_theme_folder_extension()
+    {
+        return self::$working_theme_folder_extension = $string;
+    }
+
+    /**
+     * @var string
      */
     private static $copy_css_to_folder = "src/raw_requirements/css";
 
     /**
      * we need this method because Requirements_Backend does not extend Object!
-     * @param string $string
+     * @var string $string
      */
     public static function set_copy_css_to_folder($string)
     {
@@ -46,7 +87,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend
     }
 
     /**
-     * @ var string
+     * @var string
      */
     private static $copy_js_to_folder = "src/raw_requirements/js";
 
@@ -60,7 +101,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend
     }
 
     /**
-     * @ var string
+     * @var array
      */
     private static $urls_to_exclude = array();
 
@@ -72,19 +113,35 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend
     {
         self::$urls_to_exclude = $a;
     }
+
+    /**
+     *
+     * @return array
+     */
     public static function get_urls_to_exclude()
     {
         return self::$urls_to_exclude;
     }
 
     /**
-     * @ var bool
+     * @var bool
      */
     private static $force_update = true;
+
+    /**
+     *
+     * @param bool
+     */
     public static function set_force_update($bool)
     {
         self::$force_update = $bool;
     }
+
+
+    /**
+     *
+     * @return bool
+     */
     public static function get_force_update($bool)
     {
         return self::$force_update;
@@ -114,6 +171,21 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend
      * @var boolean
      */
     protected $force_js_to_bottom = true;
+
+
+    /**
+     * @return string
+     */
+    protected static function current_theme_as_set_in_db()
+    {
+        $v = SiteConfig::current_site_config()->Theme;
+        if(! $v) {
+            $v = Config::inst()->get('SSViewer', 'current_theme');
+        }
+
+        return $v;
+    }
+
 
     /**
      * Update the given HTML content with the appropriate include tags for the registered
@@ -211,13 +283,13 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend
                 if ($this->canSaveRequirements()) {
 
                     //css
-                    $cssFolder = '/themes/'.SSViewer::current_theme().self::$working_theme_folder_extension.'/'.self::$copy_css_to_folder;
+                    $cssFolder = '/themes/'.self::current_theme_as_set_in_db().self::$working_theme_folder_extension.'/'.self::$copy_css_to_folder;
 
                     foreach ($requirementsCSSFiles as $cssFile) {
                         $this->moveFileToRequirementsFolder($cssFile, $cssFolder);
                     }
                     //js
-                    $jsFolder = '/themes/'.SSViewer::current_theme().self::$working_theme_folder_extension.'/'.self::$copy_js_to_folder;
+                    $jsFolder = '/themes/'.self::current_theme_as_set_in_db().self::$working_theme_folder_extension.'/'.self::$copy_js_to_folder;
                     foreach ($requirementsJSFiles as $jsFile) {
                         $this->moveFileToRequirementsFolder($jsFile, $jsFolder);
                     }
@@ -343,14 +415,40 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend
 
     protected function makeFolderWritable($fileLocation)
     {
-        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(dirname($fileLocation)));
-        foreach($iterator as $item) {
-            chmod($item, '0775');
-            chown($item, 'www-data:www-data');
+        if(file_exists($fileLocation)) {
+            $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(dirname($fileLocation)));
+            foreach($iterator as $item) {
+                chmod($item, '0664');
+            }
+            if($this->addLinesToFileCount < 3) {
+                $this->addLinesToFileCount++;
+            }
         }
-        if($this->addLinesToFileCount < 3) {
-            $this->addLinesToFileCount++;
-        }
-
     }
+
+
+    public static function flush()
+    {
+        //make raw requirements writeable
+        $base = Director::baseFolder();
+        $rawFolders = [
+            $base.'/'.self::$copy_css_to_folder,
+            $base.'/'.self::$copy_js_to_folder
+        ];
+        $obj = singleton('Requirements_Backend_For_Webpack');
+        $obj->makeFolderWritable($rawFolders[0]);
+        $obj->makeFolderWritable($rawFolders[1]);
+
+
+        //
+        $varArray = [
+            'themeName' => self::current_theme_as_set_in_db(),
+            'devWebAddress' => $_SERVER['HTTP_HOST'],
+            'distributionFolder' => self::current_theme_as_set_in_db().'_'.Config::inst()->get('WebpackPageControllerExtension', 'webpack_distribution_folder_extension')
+        ];
+        $str = 'module.exports = '.json_encode($varArray).'';
+        file_put_contents($base.'/'.self::$webpack_variables_file_location, $str);
+    }
+
+
 }
