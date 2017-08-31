@@ -51,7 +51,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
     /**
      * @var string
      */
-    private static $working_theme_folder_extension = "_mysite";
+    private static $working_theme_folder_extension = "mysite";
 
     /**
      * we need this method because Requirements_Backend does not extend Object!
@@ -176,14 +176,26 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
     /**
      * @return string
      */
-    protected static function current_theme_as_set_in_db()
+    protected static function webpack_current_theme_as_set_in_db()
     {
-        $v = SiteConfig::current_site_config()->Theme;
+        $v = null;
+        if(Security::database_is_ready()) {
+            $v = SiteConfig::current_site_config()->Theme;
+        }
         if(! $v) {
             $v = Config::inst()->get('SSViewer', 'current_theme');
         }
 
         return $v;
+    }
+
+
+    /**
+     * @return string
+     */
+    protected static function webpack_theme_folder_for_customisation()
+    {
+        return '/themes/'.self::webpack_current_theme_as_set_in_db().'_'.self::$working_theme_folder_extension.'/';
     }
 
 
@@ -281,15 +293,15 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
 
                 //copy files ...
                 if ($this->canSaveRequirements()) {
-
+                    $themeFolderForSavingFiles = self::webpack_theme_folder_for_customisation();
                     //css
-                    $cssFolder = '/themes/'.self::current_theme_as_set_in_db().self::$working_theme_folder_extension.'/'.self::$copy_css_to_folder;
+                    $cssFolder = $themeFolderForSavingFiles.self::$copy_css_to_folder;
 
                     foreach ($requirementsCSSFiles as $cssFile) {
                         $this->moveFileToRequirementsFolder($cssFile, $cssFolder);
                     }
                     //js
-                    $jsFolder = '/themes/'.self::current_theme_as_set_in_db().self::$working_theme_folder_extension.'/'.self::$copy_js_to_folder;
+                    $jsFolder = $themeFolderForSavingFiles.self::$copy_js_to_folder;
                     foreach ($requirementsJSFiles as $jsFile) {
                         $this->moveFileToRequirementsFolder($jsFile, $jsFolder);
                     }
@@ -431,23 +443,34 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
     {
         //make raw requirements writeable
         $base = Director::baseFolder();
+        $themeFolderForCustomisation = self::webpack_theme_folder_for_customisation();
         $rawFolders = [
-            $base.'/'.self::$copy_css_to_folder,
-            $base.'/'.self::$copy_js_to_folder
+            $base.'/'.$themeFolderForCustomisation.'/src/sass',
+            $base.'/'.$themeFolderForCustomisation.'/'.self::$copy_css_to_folder,
+            $base.'/'.$themeFolderForCustomisation.'/'.self::$copy_js_to_folder
         ];
-        $obj = singleton('Requirements_Backend_For_Webpack');
-        $obj->makeFolderWritable($rawFolders[0]);
-        $obj->makeFolderWritable($rawFolders[1]);
+        foreach($rawFolders as $folder) {
+            Filesystem::makeFolder($folder);
+        }
+        $files = [
+            $base.'/'.$themeFolderForCustomisation.'/src/main.js',
+            $base.$themeFolderForCustomisation.'/src/sass/styles.sass'
+        ];
+        foreach($files as $file) {
+            if(!file_exists($file)){
+                file_put_contents($file, '//add your customisations in this file');
+            }
+        }
 
-
-        //
         $varArray = [
-            'themeName' => self::current_theme_as_set_in_db(),
+            'themeName' => self::webpack_current_theme_as_set_in_db(),
             'devWebAddress' => $_SERVER['HTTP_HOST'],
-            'distributionFolder' => self::current_theme_as_set_in_db().'_'.Config::inst()->get('WebpackPageControllerExtension', 'webpack_distribution_folder_extension')
+            'distributionFolder' => self::webpack_current_theme_as_set_in_db().'_'.Config::inst()->get('WebpackPageControllerExtension', 'webpack_distribution_folder_extension')
         ];
         $str = 'module.exports = '.json_encode($varArray).'';
         file_put_contents($base.'/'.self::$webpack_variables_file_location, $str);
+
+
     }
 
 
