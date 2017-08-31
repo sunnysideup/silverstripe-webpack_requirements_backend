@@ -454,7 +454,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
         }
         $files = [
             $base.'/'.$themeFolderForCustomisation.'/src/main.js',
-            $base.$themeFolderForCustomisation.'/src/sass/styles.sass'
+            $base.$themeFolderForCustomisation.'/src/sass/style.sass'
         ];
         foreach($files as $file) {
             if(!file_exists($file)){
