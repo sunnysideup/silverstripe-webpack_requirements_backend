@@ -2,5 +2,5 @@
 <script src="{$WebpackBaseURL}{$ThemeDir}_{$WebpackDistributionFolderExtension}/bundle.js" charset="utf-8"></script>
 
 <% if $IsWebpackDevServer %>
-<script src="{$ThemeDir}/node_modules/jquery/dist/jquery.js" charset="utf-8"></script>
+<script src="{$ThemeDir}_node_modules/jquery/dist/jquery.js" charset="utf-8"></script>
 <% end_if %>
