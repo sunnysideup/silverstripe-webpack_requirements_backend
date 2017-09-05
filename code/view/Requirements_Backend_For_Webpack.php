@@ -180,7 +180,12 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
     {
         $v = null;
         if(Security::database_is_ready()) {
-            $v = SiteConfig::current_site_config()->Theme;
+            try{
+                $v = SiteConfig::current_site_config()->Theme;
+            }
+            catch (Exception $e) {
+                //dont worry!
+            }
         }
         if(! $v) {
             $v = Config::inst()->get('SSViewer', 'current_theme');
@@ -400,20 +405,21 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
         }
     }
 
-    protected $addLinesToFileCount = 0;
-
-    protected function copyIfYouCan($from, $to)
+    protected function copyIfYouCan($from, $to, $count = 0)
     {
         try {
             copy($from, $to);
         }
         catch(Exception $e) {
+            $count++;
             $this->makeFolderWritable();
-            $this->copyIfYouCan($from, $to);
+            if($count < 3) {
+                $this->copyIfYouCan($from, $to, $count);
+            }
         }
     }
 
-    protected function addLinesToFile($fileLocation, $line)
+    protected function addLinesToFile($fileLocation, $line, $count = 0)
     {
         try {
             $handle = fopen($fileLocation, 'a');
@@ -421,7 +427,10 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
         }
         catch(Exception $e) {
             $this->makeFolderWritable();
-            $this->addLinesToFile($fileLocation, $lines);
+            $count++;
+            if($count < 3) {
+                $this->addLinesToFile($fileLocation, $lines, $count);
+            }
         }
     }
 
@@ -431,9 +440,6 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
             $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(dirname($fileLocation)));
             foreach($iterator as $item) {
                 chmod($item, '0664');
-            }
-            if($this->addLinesToFileCount < 3) {
-                $this->addLinesToFileCount++;
             }
         }
     }
@@ -453,8 +459,8 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
             Filesystem::makeFolder($folder);
         }
         $files = [
-            $base.'/'.$themeFolderForCustomisation.'/src/main.js',
-            $base.$themeFolderForCustomisation.'/src/sass/style.sass'
+            $base.$themeFolderForCustomisation.'src/main.js',
+            $base.$themeFolderForCustomisation.'src/sass/style.sass'
         ];
         foreach($files as $file) {
             if(!file_exists($file)){
