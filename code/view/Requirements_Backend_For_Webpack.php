@@ -372,35 +372,21 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
             user_error('Please update Requirements_Backend_For_Webpack for the right folder or create '.$folderLocationWithBase);
         }
         if (strpos($fileLocation, "//") !== false) {
-            $logFile = $folderLocationWithBase."/EXTERNALS.log";
-            $lines = array();
-            $line = $_SERVER['REQUEST_URI']." | ".$fileLocation."\n";
-            if (file_exists($logFile)) {
-                $lines = file($logFile);
-            }
-            if (! in_array($line, $lines)) {
-                $this->addLinesToFile($logFile, $fileLocation);
-            }
+            $logFile = $folderLocationWithBase."/TO.INCLUDE.FROM.PAGE.SS.FILE.log";
+            $line = $_SERVER['REQUEST_URI']." | ".$fileLocation;
+            $this->addLinesToFile($logFile, $fileLocation);
         } else {
             $from = $fileLocation;
             $to = basename($fileLocation);
-            $line = '"cp .'.$from.' .'.$folderLocation.$to.'",'."\n";
-            $from = $base.$from;
-            $to = $folderLocationWithBase . '/' . $to;
-            $logFile = $folderLocationWithBase."/TO.INCLUDE.IN.COMPOSER.log";
-            $lines = array();
-            if (file_exists($logFile)) {
-                $lines = file($logFile);
-            }
-            if (! in_array($line, $lines)) {
-                $this->addLinesToFile($logFile, $line);
-            }
+            $line = '@import \''.$from.'\'';
+            $logFile = $folderLocationWithBase."/TO.INCLUDE.USING.WEBPACK.METHODS.log";
+            $this->addLinesToFile($logFile, $line);
             if (in_array($fileLocation, self::$files_to_ignore)) {
                 //to be completed ...
             } else {
-                if (! file_exists($to) || self::$force_update) {
-                    copy($from, $to);
-                }
+                // if (! file_exists($to) || self::$force_update) {
+                //     copy($from, $to);
+                // }
             }
         }
     }
@@ -421,9 +407,16 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
 
     protected function addLinesToFile($fileLocation, $line, $count = 0)
     {
+        $line .= "\n";
         try {
-            $handle = fopen($fileLocation, 'a');
-            fwrite($handle, $line);
+            $lines = [];
+            if (file_exists($fileLocation)) {
+                $lines = file($fileLocation);
+            }
+            if (! in_array($line, $lines)) {
+                $handle = fopen($fileLocation, 'a');
+                fwrite($handle, $line);
+            }
         }
         catch(Exception $e) {
             $this->makeFolderWritable();
