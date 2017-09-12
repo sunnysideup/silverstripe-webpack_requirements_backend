@@ -440,36 +440,38 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
 
     public static function flush()
     {
-        $theme = self::webpack_current_theme_as_set_in_db();
-        if($theme) {
-            //make raw requirements writeable
-            $base = Director::baseFolder();
-            $themeFolderForCustomisation = self::webpack_theme_folder_for_customisation();
-            $rawFolders = [
-                $base.'/'.$themeFolderForCustomisation.'/src/sass',
-                $base.'/'.$themeFolderForCustomisation.'/'.self::$copy_css_to_folder,
-                $base.'/'.$themeFolderForCustomisation.'/'.self::$copy_js_to_folder
-            ];
-            foreach($rawFolders as $folder) {
-                Filesystem::makeFolder($folder);
-            }
-            $files = [
-                $base.$themeFolderForCustomisation.'src/main.js',
-                $base.$themeFolderForCustomisation.'src/sass/style.sass'
-            ];
-            foreach($files as $file) {
-                if(!file_exists($file)){
-                    file_put_contents($file, '//add your customisations in this file');
+        if(Director::isDev()) {
+            $theme = self::webpack_current_theme_as_set_in_db();
+            if($theme) {
+                //make raw requirements writeable
+                $base = Director::baseFolder();
+                $themeFolderForCustomisation = self::webpack_theme_folder_for_customisation();
+                $rawFolders = [
+                    $base.'/'.$themeFolderForCustomisation.'/src/sass',
+                    $base.'/'.$themeFolderForCustomisation.'/'.self::$copy_css_to_folder,
+                    $base.'/'.$themeFolderForCustomisation.'/'.self::$copy_js_to_folder
+                ];
+                foreach($rawFolders as $folder) {
+                    Filesystem::makeFolder($folder);
                 }
-            }
+                $files = [
+                    $base.$themeFolderForCustomisation.'src/main.js',
+                    $base.$themeFolderForCustomisation.'src/sass/style.sass'
+                ];
+                foreach($files as $file) {
+                    if(!file_exists($file)){
+                        file_put_contents($file, '//add your customisations in this file');
+                    }
+                }
 
-            $varArray = [
-                'themeName' => self::webpack_current_theme_as_set_in_db(),
-                'devWebAddress' => $_SERVER['HTTP_HOST'],
-                'distributionFolder' => self::webpack_current_theme_as_set_in_db().'_'.Config::inst()->get('WebpackPageControllerExtension', 'webpack_distribution_folder_extension')
-            ];
-            $str = 'module.exports = '.json_encode($varArray).'';
-            file_put_contents($base.'/'.self::$webpack_variables_file_location, $str);
+                $varArray = [
+                    'themeName' => self::webpack_current_theme_as_set_in_db(),
+                    'devWebAddress' => $_SERVER['HTTP_HOST'],
+                    'distributionFolder' => self::webpack_current_theme_as_set_in_db().'_'.Config::inst()->get('WebpackPageControllerExtension', 'webpack_distribution_folder_extension')
+                ];
+                $str = 'module.exports = '.json_encode($varArray).'';
+                file_put_contents($base.'/'.self::$webpack_variables_file_location, $str);
+            }
         }
 
     }
