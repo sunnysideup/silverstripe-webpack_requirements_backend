@@ -470,7 +470,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
                     'distributionFolder' => self::webpack_current_theme_as_set_in_db().'_'.Config::inst()->get('WebpackPageControllerExtension', 'webpack_distribution_folder_extension')
                 ];
                 $str = 'module.exports = '.json_encode($varArray).'';
-                file_put_contents($base.'/'.self::$webpack_variables_file_location, $str);
+                @file_put_contents($base.'/'.self::$webpack_variables_file_location, $str);
             }
         }
 
