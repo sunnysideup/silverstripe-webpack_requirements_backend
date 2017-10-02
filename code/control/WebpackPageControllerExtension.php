@@ -53,7 +53,7 @@ class WebpackPageControllerExtension extends extension
     public function WebpackBaseURL()
     {
         $str = Director::AbsoluteBaseURL('/');
-        if($this->IsWebpackDevServer()) {
+        if ($this->IsWebpackDevServer()) {
             $str = rtrim($str, '/') .':'.$this->owner->Config()->get('webpack_port').'/';
         }
 
@@ -63,5 +63,20 @@ class WebpackPageControllerExtension extends extension
     public function WebpackDistributionFolderExtension()
     {
         return $this->owner->Config()->get('webpack_distribution_folder_extension');
+    }
+
+    public function WebpackFileHash($type = 'JS')
+    {
+        $base = Director::baseFolder();
+        if ($type === 'JS') {
+            $file = 'bundle.js';
+        } elseif ($type === 'CSS') {
+            $file = 'style.css';
+        } else {
+            user_error('Please specify JS or CSS, '.$type.' specified.');
+        }
+        $fullFile = $base.'/'.$this->owner->ThemeDir().'_'.$this->WebpackDistributionFolderExtension().'/'.$file;
+
+        return filemtime($fullFile);
     }
 }
