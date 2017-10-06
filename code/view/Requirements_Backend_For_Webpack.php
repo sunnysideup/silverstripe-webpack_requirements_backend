@@ -378,7 +378,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
         } else {
             $from = $fileLocation;
             $to = basename($fileLocation);
-            $line = '@import \''.$from.'\'';
+            $line = '@import \'site'.$from.'\'';
             $logFile = $folderLocationWithBase."/TO.INCLUDE.USING.WEBPACK.METHODS.log";
             $this->addLinesToFile($logFile, $line);
             if (in_array($fileLocation, self::$files_to_ignore)) {
