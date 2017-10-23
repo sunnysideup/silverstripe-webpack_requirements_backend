@@ -442,14 +442,16 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
     {
         if(Director::isDev()) {
             $theme = self::webpack_current_theme_as_set_in_db();
+            $distributionFolderExtension = Config::inst()->get('WebpackPageControllerExtension', 'webpack_distribution_folder_extension');
             if($theme) {
                 //make raw requirements writeable
                 $base = Director::baseFolder();
                 $themeFolderForCustomisation = self::webpack_theme_folder_for_customisation();
                 $rawFolders = [
-                    $base.'/'.$themeFolderForCustomisation.'/src/sass',
-                    $base.'/'.$themeFolderForCustomisation.'/'.self::$copy_css_to_folder,
-                    $base.'/'.$themeFolderForCustomisation.'/'.self::$copy_js_to_folder
+                    $base.$themeFolderForCustomisation.'src/sass',
+                    $base.$themeFolderForCustomisation.''.self::$copy_css_to_folder,
+                    $base.$themeFolderForCustomisation.''.self::$copy_js_to_folder,
+                    $base.'/'.THEMES_DIR . "/" . $theme.'_'.$distributionFolderExtension
                 ];
                 foreach($rawFolders as $folder) {
                     Filesystem::makeFolder($folder);
