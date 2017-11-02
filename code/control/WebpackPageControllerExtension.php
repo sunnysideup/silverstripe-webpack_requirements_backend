@@ -21,6 +21,8 @@ class WebpackPageControllerExtension extends extension
 
     /**
      * override webpack server for custom set ups
+     * this is the server used for checking if the webpack server is running
+     * @see IsWebpackDevServer
      * @var bool
      */
     private static $webpack_socket_server = 'localhost';
