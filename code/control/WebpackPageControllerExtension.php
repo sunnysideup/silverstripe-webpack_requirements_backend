@@ -11,6 +11,28 @@ class WebpackPageControllerExtension extends extension
     private static $webpack_enabled_themes = [];
 
     /**
+     * override webpack server for custom set ups
+     * set to true to make this class believe you are always running
+     * the webpack server
+     * @see IsWebpackDevServer
+     * @var bool
+     */
+    private static $is_webpack_server = false;
+
+    /**
+     * override webpack server for custom set ups
+     * @var bool
+     */
+    private static $webpack_socket_server = 'localhost';
+
+    /**
+     * usually this is set to current domain
+     * @see: WebpackBaseURL
+     * @var string
+     */
+    private static $webpack_server = '';
+
+    /**
      *
      * @var int
      */
@@ -39,9 +61,14 @@ class WebpackPageControllerExtension extends extension
      */
     public function IsWebpackDevServer()
     {
+        $override = $this->owner->Config()->get('is_webpack_server');
+        if($override) {
+
+            return $override;
+        }
         if (Director::isDev()) {
-            $socket = @fsockopen('localhost', $this->owner->Config()->get('webpack_port'), $errno, $errstr, 1);
-            return !$socket ? false : true;
+            $socket = @fsockopen($this->owner->Config()->get('webpack_socket_server'), $this->owner->Config()->get('webpack_port'), $errno, $errstr, 1);
+            return ! $socket ? false : true;
         }
     }
 
@@ -52,7 +79,10 @@ class WebpackPageControllerExtension extends extension
      */
     public function WebpackBaseURL()
     {
-        $str = Director::AbsoluteBaseURL('/');
+        $webpackServer = $this->owner->Config()->get('webpack_server');
+        if(! $webpackServer) {
+            $webpackServer = Director::AbsoluteBaseURL('/');
+        }
         if ($this->IsWebpackDevServer()) {
             $str = rtrim($str, '/') .':'.$this->owner->Config()->get('webpack_port').'/';
         }
