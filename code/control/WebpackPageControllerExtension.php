@@ -92,10 +92,10 @@ class WebpackPageControllerExtension extends extension
             $webpackServer = Director::AbsoluteBaseURL('/');
         }
         if ($this->IsWebpackDevServer()) {
-            $str = rtrim($str, '/') .':'.$this->owner->Config()->get('webpack_port').'/';
+            $webpackServer = rtrim($webpackServer, '/') .':'.$this->owner->Config()->get('webpack_port').'/';
         }
 
-        return $str;
+        return $webpackServer;
     }
 
     public function WebpackDistributionFolderExtension()
