@@ -69,7 +69,13 @@ class WebpackPageControllerExtension extends extension
             return $override;
         }
         if (Director::isDev()) {
-            $socket = @fsockopen($this->owner->Config()->get('webpack_socket_server'), $this->owner->Config()->get('webpack_port'), $errno, $errstr, 1);
+            $socket = @fsockopen(
+                $this->owner->Config()->get('webpack_socket_server'),
+                $this->owner->Config()->get('webpack_port'),
+                $errno,
+                $errstr,
+                1
+            );
             return ! $socket ? false : true;
         }
     }
