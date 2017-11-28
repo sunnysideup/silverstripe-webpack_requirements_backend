@@ -468,7 +468,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
 
                 $varArray = [
                     'themeName' => self::webpack_current_theme_as_set_in_db(),
-                    'devWebAddress' => $_SERVER['HTTP_HOST'],
+                    'devWebAddress' => isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : Director::protocolAndHost(),
                     'distributionFolder' => self::webpack_current_theme_as_set_in_db().'_'.Config::inst()->get('WebpackPageControllerExtension', 'webpack_distribution_folder_extension')
                 ];
                 $str = 'module.exports = '.json_encode($varArray).'';
