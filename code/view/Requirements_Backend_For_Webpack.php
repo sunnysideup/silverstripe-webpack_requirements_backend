@@ -414,8 +414,11 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
                 $lines = file($fileLocation);
             }
             if (! in_array($line, $lines)) {
-                $handle = fopen($fileLocation, 'a');
-                fwrite($handle, $line);
+                //last catch!
+                if(is_writable($fileLocation)) {
+                    $handle = fopen($fileLocation, 'a');
+                    fwrite($handle, $line);
+                }
             }
         }
         catch(Exception $e) {
