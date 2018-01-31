@@ -64,8 +64,7 @@ class WebpackPageControllerExtension extends extension
     public function IsWebpackDevServer()
     {
         $override = $this->owner->Config()->get('is_webpack_server');
-        if($override) {
-
+        if ($override) {
             return $override;
         }
         if (Director::isDev()) {
@@ -88,7 +87,7 @@ class WebpackPageControllerExtension extends extension
     public function WebpackBaseURL()
     {
         $webpackServer = $this->owner->Config()->get('webpack_server');
-        if(! $webpackServer) {
+        if (! $webpackServer) {
             $webpackServer = Director::AbsoluteBaseURL('/');
         }
         if ($this->IsWebpackDevServer()) {
