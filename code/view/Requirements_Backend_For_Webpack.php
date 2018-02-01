@@ -179,15 +179,14 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
     protected static function webpack_current_theme_as_set_in_db()
     {
         $v = null;
-        if(Security::database_is_ready()) {
-            try{
+        if (Security::database_is_ready()) {
+            try {
                 $v = SiteConfig::current_site_config()->Theme;
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 //dont worry!
             }
         }
-        if(! $v) {
+        if (! $v) {
             $v = Config::inst()->get('SSViewer', 'current_theme');
         }
 
@@ -234,13 +233,13 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
                 $isDev = Director::isDev();
                 foreach (array_diff_key($this->javascript, $this->blocked) as $file => $dummy) {
                     $ignore = in_array($file, self::$files_to_ignore) ? true : false;
-                    if($isDev || $ignore) {
+                    if ($isDev || $ignore) {
                         $path = Convert::raw2xml($this->path_for_file($file));
                         if ($path) {
                             if ($isDev) {
                                 $requirementsJSFiles[$path] = $path;
                             }
-                            if(in_array($file, self::$files_to_ignore)) {
+                            if (in_array($file, self::$files_to_ignore)) {
                                 $jsRequirements .= "<script type=\"text/javascript\" src=\"$path\"></script>\n";
                             }
                         }
@@ -258,15 +257,15 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
 
                 foreach (array_diff_key($this->css, $this->blocked) as $file => $params) {
                     $ignore = in_array($file, self::$files_to_ignore) ? true : false;
-                    if($isDev || $ignore) {
+                    if ($isDev || $ignore) {
                         $path = Convert::raw2xml($this->path_for_file($file));
                         if ($path) {
                             $media = (isset($params['media']) && !empty($params['media'])) ? $params['media'] : "";
                             if ($isDev) {
                                 $requirementsCSSFiles[$path."_".$media] = $path;
                             }
-                            if($ignore) {
-                                if($media !== '') {
+                            if ($ignore) {
+                                if ($media !== '') {
                                     $media = " media=\"{$media}\"";
                                 }
                                 $requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$path\" />\n";
@@ -395,11 +394,10 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
     {
         try {
             copy($from, $to);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             $count++;
             $this->makeFolderWritable();
-            if($count < 3) {
+            if ($count < 3) {
                 $this->copyIfYouCan($from, $to, $count);
             }
         }
@@ -415,16 +413,15 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
             }
             if (! in_array($line, $lines)) {
                 //last catch!
-                if(is_writable($fileLocation)) {
+                if (is_writable($fileLocation)) {
                     $handle = fopen($fileLocation, 'a');
                     fwrite($handle, $line);
                 }
             }
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             $this->makeFolderWritable();
             $count++;
-            if($count < 3) {
+            if ($count < 3) {
                 $this->addLinesToFile($fileLocation, $lines, $count);
             }
         }
@@ -432,9 +429,9 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
 
     protected function makeFolderWritable($fileLocation)
     {
-        if(file_exists($fileLocation)) {
+        if (file_exists($fileLocation)) {
             $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(dirname($fileLocation)));
-            foreach($iterator as $item) {
+            foreach ($iterator as $item) {
                 chmod($item, '0664');
             }
         }
@@ -443,10 +440,10 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
 
     public static function flush()
     {
-        if(Director::isDev()) {
+        if (Director::isDev()) {
             $theme = self::webpack_current_theme_as_set_in_db();
             $distributionFolderExtension = Config::inst()->get('WebpackPageControllerExtension', 'webpack_distribution_folder_extension');
-            if($theme) {
+            if ($theme) {
                 //make raw requirements writeable
                 $base = Director::baseFolder();
                 $themeFolderForCustomisation = self::webpack_theme_folder_for_customisation();
@@ -456,15 +453,15 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
                     $base.$themeFolderForCustomisation.''.self::$copy_js_to_folder,
                     $base.'/'.THEMES_DIR . "/" . $theme.'_'.$distributionFolderExtension
                 ];
-                foreach($rawFolders as $folder) {
+                foreach ($rawFolders as $folder) {
                     Filesystem::makeFolder($folder);
                 }
                 $files = [
                     $base.$themeFolderForCustomisation.'src/main.js',
                     $base.$themeFolderForCustomisation.'src/sass/style.sass'
                 ];
-                foreach($files as $file) {
-                    if(!file_exists($file)){
+                foreach ($files as $file) {
+                    if (!file_exists($file)) {
                         file_put_contents($file, '//add your customisations in this file');
                     }
                 }
@@ -478,8 +475,5 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
                 @file_put_contents($base.'/'.self::$webpack_variables_file_location, $str);
             }
         }
-
     }
-
-
 }
