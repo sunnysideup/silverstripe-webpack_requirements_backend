@@ -190,6 +190,10 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
             $v = Config::inst()->get('SSViewer', 'current_theme');
         }
 
+        if(! $v) {
+            user_error('We recommend you set a theme as soon as possible.', E_USER_NOTICE);
+        }
+
         return $v;
     }
 
@@ -342,11 +346,13 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
      */
     protected function canSaveRequirements()
     {
-        if (Director::isDev()) {
-            if ($this->themedRequest()) {
-                $socket = @fsockopen('localhost', 3000, $errno, $errstr, 1);
-                if ($socket) {
-                    return true;
+        if(self::webpack_current_theme_as_set_in_db()) {
+            if (Director::isDev()) {
+                if ($this->themedRequest()) {
+                    $socket = @fsockopen('localhost', 3000, $errno, $errstr, 1);
+                    if ($socket) {
+                        return true;
+                    }
                 }
             }
         }
