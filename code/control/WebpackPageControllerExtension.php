@@ -1,7 +1,7 @@
 <?php
 
 
-class WebpackPageControllerExtension extends extension
+class WebpackPageControllerExtension extends Extension
 {
 
     /**
