@@ -2,12 +2,12 @@
 
 /**
  * Requirements_Backend_For_Webpack::set_files_to_ignore(
- *  'mysite/javascript/myfile.js';
+ *  'app/javascript/myfile.js';
  * );
  *
  *
  */
-class Requirements_Backend_For_Webpack extends Requirements_Backend implements flushable
+class Requirements_Backend_For_Webpack extends Requirements_Backend implements Flushable
 {
 
 
@@ -26,7 +26,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
     }
 
     /**
-     * e.g. /mysite/javascript/test.js
+     * e.g. /app/javascript/test.js
      * @var array
      */
     private static $files_to_ignore = array();
@@ -51,7 +51,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
     /**
      * @var string
      */
-    private static $working_theme_folder_extension = "mysite";
+    private static $working_theme_folder_extension = "app";
 
     /**
      * we need this method because Requirements_Backend does not extend Object!
