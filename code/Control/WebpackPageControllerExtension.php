@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\WebpackRequirementsBackend\Control;
+
+use Extension;
+use Director;
+use Config;
+
+
 
 class WebpackPageControllerExtension extends Extension/*
 ### @@@@ START UPGRADE REQUIRED @@@@ ###
