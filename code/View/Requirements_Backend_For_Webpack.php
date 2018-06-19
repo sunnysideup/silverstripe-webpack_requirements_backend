@@ -2,18 +2,30 @@
 
 namespace Sunnysideup\WebpackRequirementsBackend\View;
 
-use Requirements_Backend;
-use Flushable;
-use Security;
-use SiteConfig;
+
+
+
+
 use Exception;
-use Config;
-use Director;
-use Convert;
-use SS_HTTPResponse;
-use Filesystem;
+
+
+
+
+
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
+use SilverStripe\Security\Security;
+use SilverStripe\SiteConfig\SiteConfig;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\View\SSViewer;
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Convert;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Assets\Filesystem;
+use Sunnysideup\WebpackRequirementsBackend\Control\WebpackPageControllerExtension;
+use SilverStripe\View\Requirements_Backend;
+use SilverStripe\Core\Flushable;
+
 
 
 /**
@@ -203,7 +215,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
             }
         }
         if (! $v) {
-            $v = Config::inst()->get('SSViewer', 'current_theme');
+            $v = Config::inst()->get(SSViewer::class, 'current_theme');
         }
 
         if (! $v) {
@@ -343,7 +355,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
      *
      * @param SS_HTTPResponse $response
      */
-    public function include_in_response(SS_HTTPResponse $response)
+    public function include_in_response(HTTPResponse $response)
     {
         if ($this->themedRequest()) {
             //do nothing
@@ -381,7 +393,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
      */
     protected function themedRequest()
     {
-        return Config::inst()->get('SSViewer', 'theme') && Config::inst()->get('SSViewer', 'theme_enabled') ? true : false;
+        return Config::inst()->get(SSViewer::class, 'theme') && Config::inst()->get(SSViewer::class, 'theme_enabled') ? true : false;
     }
 
     protected function moveFileToRequirementsFolder($fileLocation, $folderLocation)
@@ -464,7 +476,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
     {
         if (Director::isDev()) {
             $theme = self::webpack_current_theme_as_set_in_db();
-            $distributionFolderExtension = Config::inst()->get('WebpackPageControllerExtension', 'webpack_distribution_folder_extension');
+            $distributionFolderExtension = Config::inst()->get(WebpackPageControllerExtension::class, 'webpack_distribution_folder_extension');
             if ($theme) {
                 //make raw requirements writeable
                 $base = Director::baseFolder();
@@ -491,7 +503,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
                 $varArray = [
                     'themeName' => self::webpack_current_theme_as_set_in_db(),
                     'devWebAddress' => isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : Director::protocolAndHost(),
-                    'distributionFolder' => self::webpack_current_theme_as_set_in_db().'_'.Config::inst()->get('WebpackPageControllerExtension', 'webpack_distribution_folder_extension')
+                    'distributionFolder' => self::webpack_current_theme_as_set_in_db().'_'.Config::inst()->get(WebpackPageControllerExtension::class, 'webpack_distribution_folder_extension')
                 ];
                 $str = 'module.exports = '.json_encode($varArray).'';
                 @file_put_contents($base.'/'.self::$webpack_variables_file_location, $str);
