@@ -10,7 +10,6 @@
 class Requirements_Backend_For_Webpack extends Requirements_Backend implements flushable
 {
 
-
     /**
      * @var string
      */
@@ -26,10 +25,11 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
     }
 
     /**
+     * IMPORTANT ... you will use this one more than others ...
      * e.g. /mysite/javascript/test.js
      * @var array
      */
-    private static $files_to_ignore = array();
+    private static $files_to_ignore = [];
 
     /**
      * we need this method because Requirements_Backend does not extend Object!
@@ -368,6 +368,12 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
         return Config::inst()->get('SSViewer', 'theme') && Config::inst()->get('SSViewer', 'theme_enabled') ? true : false;
     }
 
+    /**
+     *
+     * @param  string $fileLocation
+     * @param  string $folderLocation
+     *
+     */
     protected function moveFileToRequirementsFolder($fileLocation, $folderLocation)
     {
         $base = Director::baseFolder();

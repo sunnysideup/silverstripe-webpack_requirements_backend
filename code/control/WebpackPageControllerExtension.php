@@ -5,7 +5,8 @@ class WebpackPageControllerExtension extends Extension
 {
 
     /**
-     *
+     * you only need to set this if you have some themes that are enabled and some themes
+     * that do not run webpack
      * @var {Array}
      */
     private static $webpack_enabled_themes = [];
@@ -29,6 +30,7 @@ class WebpackPageControllerExtension extends Extension
 
     /**
      * usually this is set to current domain
+     * only set if you need an alternative
      * @see: WebpackBaseURL
      * @var string
      */
@@ -40,9 +42,9 @@ class WebpackPageControllerExtension extends Extension
      */
     private static $webpack_port = 3000;
 
-
     /**
-     *
+     * this is the folder where the distilled files are placed.
+     * If your theme is foo then you will find the distilled files in themes/foo_dist
      * @var string
      */
     private static $webpack_distribution_folder_extension = 'dist';
@@ -97,11 +99,19 @@ class WebpackPageControllerExtension extends Extension
         return $webpackServer;
     }
 
+    /**
+     * @return string
+     */
     public function WebpackDistributionFolderExtension()
     {
         return $this->owner->Config()->get('webpack_distribution_folder_extension');
     }
 
+    /**
+     *
+     * @param string $type should be set to JS or CSS
+     * @return string
+     */
     public function WebpackFileHash($type = 'JS')
     {
         $base = Director::baseFolder();

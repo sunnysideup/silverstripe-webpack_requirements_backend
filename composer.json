@@ -30,5 +30,8 @@
     },
     "extra": {
         "installer-name": "webpack_requirements_backend"
+    },
+    "suggest": {
+        "sunnysideup/sswebpack_engine_only": "Add webpack itself"
     }
 }

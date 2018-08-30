@@ -1,0 +1,18 @@
+# you dont usually need to set this, but you may need them!
+
+WebpackPageControllerExtension:
+  webpack_enabled_themes: []
+  is_webpack_server: false
+  webpack_socket_server: localhost
+  webpack_server: ''
+  webpack_port: 3000
+  webpack_distribution_folder_extension: dist
+
+Requirements_Backend_For_Webpack:
+  webpack_variables_file_location: ''
+  files_to_ignore: []
+  working_theme_folder_extension: 'mysite'
+  copy_css_to_folder: "src/raw_requirements/css"
+  copy_js_to_folder: "src/raw_requirements/js"
+  urls_to_exclude = []
+  force_update: false
