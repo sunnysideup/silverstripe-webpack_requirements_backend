@@ -1,7 +1,24 @@
 <?php
 
+namespace Sunnysideup\WebpackRequirementsBackend\Control;
 
-class WebpackPageControllerExtension extends Extension
+
+
+
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\View\SSViewer;
+use SilverStripe\Core\Extension;
+
+
+
+
+class WebpackPageControllerExtension extends Extension/*
+### @@@@ START UPGRADE REQUIRED @@@@ ###
+FIND: extends Extension
+NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner->ID] or consider turning the class into a trait 
+### @@@@ END UPGRADE REQUIRED @@@@ ###
+*/
 {
 
     /**
@@ -122,7 +139,7 @@ class WebpackPageControllerExtension extends Extension
         } else {
             user_error('Please specify JS or CSS, '.$type.' specified.');
         }
-        $fullFile = $base.'/'.THEMES_DIR . "/" . Config::inst()->get('SSViewer', 'theme').'_'.$this->WebpackDistributionFolderExtension().'/'.$file;
+        $fullFile = $base.'/'.THEMES_DIR . "/" . Config::inst()->get(SSViewer::class, 'theme').'_'.$this->WebpackDistributionFolderExtension().'/'.$file;
 
         return @filemtime($fullFile);
     }
