@@ -1,0 +1,3 @@
+mappings:
+  WebpackPageControllerExtension: Sunnysideup\WebpackRequirementsBackend\Control\WebpackPageControllerExtension
+  Requirements_Backend_For_Webpack: Sunnysideup\WebpackRequirementsBackend\View\Requirements_Backend_For_Webpack

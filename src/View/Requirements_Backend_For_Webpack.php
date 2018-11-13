@@ -1,5 +1,22 @@
 <?php
 
+namespace Sunnysideup\WebpackRequirementsBackend\View;
+
+use Requirements_Backend;
+use Flushable;
+use Security;
+use SiteConfig;
+use Exception;
+use Config;
+use Director;
+use Convert;
+use SS_HTTPResponse;
+use Filesystem;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
+use ThemeResourceLoader;
+
+
 /**
  * Requirements_Backend_For_Webpack::set_files_to_ignore(
  *  'app/javascript/myfile.js';

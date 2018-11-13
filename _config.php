@@ -1,5 +1,12 @@
 <?php
 
+namespace Sunnysideup\WebpackRequirementsBackend;
+
+use Config;
+use Requirements;
+use Requirements_Backend_For_Webpack;
+
+
 if (defined('webpack_requirements_backend_off')) {
     //do nothing
 } else {
