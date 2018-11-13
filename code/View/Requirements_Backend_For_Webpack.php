@@ -396,6 +396,12 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
         return Config::inst()->get(SSViewer::class, 'theme') && Config::inst()->get(SSViewer::class, 'theme_enabled') ? true : false;
     }
 
+    /**
+     *
+     * @param  string $fileLocation
+     * @param  string $folderLocation
+     *
+     */
     protected function moveFileToRequirementsFolder($fileLocation, $folderLocation)
     {
         $base = Director::baseFolder();

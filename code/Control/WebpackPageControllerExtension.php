@@ -22,7 +22,8 @@ NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner
 {
 
     /**
-     *
+     * you only need to set this if you have some themes that are enabled and some themes
+     * that do not run webpack
      * @var {Array}
      */
     private static $webpack_enabled_themes = [];
@@ -46,6 +47,7 @@ NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner
 
     /**
      * usually this is set to current domain
+     * only set if you need an alternative
      * @see: WebpackBaseURL
      * @var string
      */
@@ -57,9 +59,9 @@ NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner
      */
     private static $webpack_port = 3000;
 
-
     /**
-     *
+     * this is the folder where the distilled files are placed.
+     * If your theme is foo then you will find the distilled files in themes/foo_dist
      * @var string
      */
     private static $webpack_distribution_folder_extension = 'dist';
@@ -114,11 +116,19 @@ NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner
         return $webpackServer;
     }
 
+    /**
+     * @return string
+     */
     public function WebpackDistributionFolderExtension()
     {
         return $this->owner->Config()->get('webpack_distribution_folder_extension');
     }
 
+    /**
+     *
+     * @param string $type should be set to JS or CSS
+     * @return string
+     */
     public function WebpackFileHash($type = 'JS')
     {
         $base = Director::baseFolder();
