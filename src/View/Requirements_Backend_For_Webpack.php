@@ -361,7 +361,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
         if ($this->themedRequest()) {
             //do nothing
         } else {
-            return parent::include_in_response($response);
+            return parent::includeInResponse($response);
         }
         //$this->process_combined_files();
         //do nothing ...
