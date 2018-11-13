@@ -2,10 +2,15 @@
 
 namespace Sunnysideup\WebpackRequirementsBackend\Control;
 
-use Extension;
-use Director;
+
+
 use ThemeResourceLoader;
-use Config;
+
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\View\SSViewer;
+use SilverStripe\Core\Extension;
+
 
 
 
@@ -140,7 +145,7 @@ NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner
 FIND: THEMES_DIR
 NOTE: Please review update and fix as required 
 ### @@@@ END UPGRADE REQUIRED @@@@ ###
-*/ . "/" . Config::inst()->get('SSViewer', 'theme').'_'.$this->WebpackDistributionFolderExtension().'/'.$file;
+*/ . "/" . Config::inst()->get(SSViewer::class, 'theme').'_'.$this->WebpackDistributionFolderExtension().'/'.$file;
 
         return @filemtime($fullFile);
     }
