@@ -2,12 +2,12 @@
 
 /**
  * Requirements_Backend_For_Webpack::set_files_to_ignore(
- *  'mysite/javascript/myfile.js';
+ *  'app/javascript/myfile.js';
  * );
  *
  *
  */
-class Requirements_Backend_For_Webpack extends Requirements_Backend implements flushable
+class Requirements_Backend_For_Webpack extends Requirements_Backend implements Flushable
 {
 
     /**
@@ -26,7 +26,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
 
     /**
      * IMPORTANT ... you will use this one more than others ...
-     * e.g. /mysite/javascript/test.js
+     * e.g. /app/javascript/test.js
      * @var array
      */
     private static $files_to_ignore = [];
@@ -51,7 +51,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
     /**
      * @var string
      */
-    private static $working_theme_folder_extension = "mysite";
+    private static $working_theme_folder_extension = "app";
 
     /**
      * we need this method because Requirements_Backend does not extend Object!
@@ -463,7 +463,12 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements f
                     $base.$themeFolderForCustomisation.'src/sass',
                     $base.$themeFolderForCustomisation.''.self::$copy_css_to_folder,
                     $base.$themeFolderForCustomisation.''.self::$copy_js_to_folder,
-                    $base.'/'.THEMES_DIR . "/" . $theme.'_'.$distributionFolderExtension
+                    $base.'/'.ThemeResourceLoader::inst()->getPath('UPGRADE-FIX-REQUIRED.foo.bar')/*
+### @@@@ START UPGRADE REQUIRED @@@@ ###
+FIND: THEMES_DIR
+NOTE: Please review update and fix as required 
+### @@@@ END UPGRADE REQUIRED @@@@ ###
+*/ . "/" . $theme.'_'.$distributionFolderExtension
                 ];
                 foreach ($rawFolders as $folder) {
                     Filesystem::makeFolder($folder);

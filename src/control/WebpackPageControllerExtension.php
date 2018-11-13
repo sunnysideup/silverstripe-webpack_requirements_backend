@@ -1,7 +1,12 @@
 <?php
 
 
-class WebpackPageControllerExtension extends Extension
+class WebpackPageControllerExtension extends Extension/*
+### @@@@ START UPGRADE REQUIRED @@@@ ###
+FIND:  extends Extension
+NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner->ID] or consider turning the class into a trait 
+### @@@@ END UPGRADE REQUIRED @@@@ ###
+*/
 {
 
     /**
@@ -122,7 +127,12 @@ class WebpackPageControllerExtension extends Extension
         } else {
             user_error('Please specify JS or CSS, '.$type.' specified.');
         }
-        $fullFile = $base.'/'.THEMES_DIR . "/" . Config::inst()->get('SSViewer', 'theme').'_'.$this->WebpackDistributionFolderExtension().'/'.$file;
+        $fullFile = $base.'/'.ThemeResourceLoader::inst()->getPath('UPGRADE-FIX-REQUIRED.foo.bar')/*
+### @@@@ START UPGRADE REQUIRED @@@@ ###
+FIND: THEMES_DIR
+NOTE: Please review update and fix as required 
+### @@@@ END UPGRADE REQUIRED @@@@ ###
+*/ . "/" . Config::inst()->get('SSViewer', 'theme').'_'.$this->WebpackDistributionFolderExtension().'/'.$file;
 
         return @filemtime($fullFile);
     }
