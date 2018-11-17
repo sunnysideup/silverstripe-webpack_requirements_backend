@@ -247,7 +247,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
      */
     public function includeInHTML($content)
     {
-        if ($this->themedRequest()) {
+        if (self::themed_request()) {
 
             //=====================================================================
             // start copy-ish from parent class
@@ -328,7 +328,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
                 //=====================================================================
 
                 //copy files ...
-                if ($this->canSaveRequirements()) {
+                if (self::can_save_requirements()) {
                     $themeFolderForSavingFiles = self::webpack_theme_folder_for_customisation();
                     //css
                     $cssFolder = $themeFolderForSavingFiles.self::$copy_css_to_folder;
@@ -357,7 +357,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
      */
     public function include_in_response(HTTPResponse $response)
     {
-        if ($this->themedRequest()) {
+        if (self::themed_request()) {
             //do nothing
         } else {
             return parent::includeInResponse($response);
@@ -372,11 +372,13 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
      *
      * @return bool
      */
-    protected function canSaveRequirements()
+    public static function can_save_requirements()
     {
+        //@todo: check if the folders can be written ...
+        return false;
         if (self::webpack_current_theme_as_set_in_db()) {
             if (Director::isDev()) {
-                if ($this->themedRequest()) {
+                if (self::themed_request()) {
                     $socket = @fsockopen('localhost', 3000, $errno, $errstr, 1);
                     if ($socket) {
                         return true;
@@ -391,7 +393,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
      *
      * @return bool
      */
-    protected function themedRequest()
+    public static function themed_request()
     {
         return Config::inst()->get(SSViewer::class, 'theme') && Config::inst()->get(SSViewer::class, 'theme_enabled') ? true : false;
     }
@@ -483,7 +485,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
         if (Director::isDev()) {
             $theme = self::webpack_current_theme_as_set_in_db();
             $distributionFolderExtension = Config::inst()->get(WebpackPageControllerExtension::class, 'webpack_distribution_folder_extension');
-            if ($theme) {
+            if ($theme && self::can_save_requirements()) {
                 //make raw requirements writeable
                 $base = Director::baseFolder();
                 $themeFolderForCustomisation = self::webpack_theme_folder_for_customisation();

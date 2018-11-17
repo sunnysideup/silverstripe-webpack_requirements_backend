@@ -11,7 +11,7 @@ WebpackPageControllerExtension:
 Requirements_Backend_For_Webpack:
   webpack_variables_file_location: ''
   files_to_ignore: []
-  working_theme_folder_extension: 'mysite'
+  working_theme_folder_extension: 'app'
   copy_css_to_folder: "src/raw_requirements/css"
   copy_js_to_folder: "src/raw_requirements/js"
   urls_to_exclude = []
