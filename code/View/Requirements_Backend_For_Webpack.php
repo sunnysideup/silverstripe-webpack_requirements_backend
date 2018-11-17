@@ -245,7 +245,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
      *                             through {@link SSViewer}
      * @return string HTML content augmented with the requirements tags
      */
-    public function includeInHTML($templateFile, $content)
+    public function includeInHTML($content)
     {
         if ($this->themedRequest()) {
 
@@ -345,7 +345,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
             }
             return $content;
         } else {
-            return parent::includeInHTML($templateFile, $content);
+            return parent::includeInHTML($content);
         }
     }
 

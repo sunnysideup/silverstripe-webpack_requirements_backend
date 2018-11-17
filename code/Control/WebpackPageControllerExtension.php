@@ -13,12 +13,7 @@ use SilverStripe\Core\Extension;
 
 
 
-class WebpackPageControllerExtension extends Extension/*
-### @@@@ START UPGRADE REQUIRED @@@@ ###
-FIND: extends Extension
-NOTE: Check for use of $this->anyVar and replace with $this->anyVar[$this->owner->ID] or consider turning the class into a trait 
-### @@@@ END UPGRADE REQUIRED @@@@ ###
-*/
+class WebpackPageControllerExtension extends Extension
 {
 
     /**
