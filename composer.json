@@ -1,6 +1,6 @@
 {
     "name": "sunnysideup/webpack_requirements_backend",
-    "type": "silverstripe-module",
+    "type": "silverstripe-vendormodule",
     "description": "Silverstripe Module that provides an alternative to the standard Silvertripe Requirements Backend class so that your application can run webpack.",
     "keywords": [
         "Silverstripe-CMS",
