@@ -4,9 +4,33 @@ This module refines the Requirements class for Silverstripe. It moves all your C
 
 ## what it does
 
+You need to add two includes to your `Page.ss` template:
+ * WebpackCSSLinks
+ * WebpackJSLinks
+ Your html template should look something like this:
+ ```html
+ <!doctype html>
+ <html lang="en">
+ <head>
+     <meta charset="utf-8">
+     <title>Webpack example</title>
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+     <% include WebpackCSSLinks %>
+ </head>
+ <body>
+     <script
+         src="https://code.jquery.com/jquery-3.3.1.min.js"
+         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+         crossorigin="anonymous">
+     </script>
+     <% include WebpackJSLinks %>
+ </body>
+ </html>
+ ```
+
 The `customScripts` and `customCSS` calls work as normal. On the other hand, any css files included are copied to a special directory (for inclusion in a `webpack`) instead of being included in the HTML output.
 
-_*DO NOT CHANGE THE FILES IN THESE COLLATED REQUIREMENTS FOLDERS AS THEY WILL BE OVERRITTEN BY NEW VERSIONS FROM THE MODULES / REGULAR THEME FOLDERS*_
+_*DO NOT CHANGE THE FILES IN THESE COLLATED REQUIREMENTS FOLDERS AS THEY WILL BE OVERWRITTEN BY NEW VERSIONS FROM THE MODULES / REGULAR THEME FOLDERS*_
 
 You can go through this requirements folder and pick the CSS and JS you would like to include in your `webpack` using the standard webpack methodologies.
 
