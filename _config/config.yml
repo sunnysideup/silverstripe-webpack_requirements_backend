@@ -2,6 +2,6 @@ Name: webpack_requirements_backend
 ---
 
 
-ContentController:
+SilverStripe\CMS\Controllers\ContentController:
     extensions:
-      - WebpackPageControllerExtension
+      - Sunnysideup\WebpackRequirementsBackend\Control\WebpackPageControllerExtension
