@@ -25,7 +25,7 @@ use SilverStripe\Assets\Filesystem;
 use Sunnysideup\WebpackRequirementsBackend\Control\WebpackPageControllerExtension;
 use SilverStripe\View\Requirements_Backend;
 use SilverStripe\Core\Flushable;
-
+use SilverStripe\Core\Config\Configurable;
 
 
 /**
@@ -38,20 +38,12 @@ use SilverStripe\Core\Flushable;
 class Requirements_Backend_For_Webpack extends Requirements_Backend implements Flushable
 {
 
+    use Configurable;
 
     /**
      * @var string
      */
     private static $webpack_variables_file_location = 'themes/webpack-variables.js';
-
-    /**
-     * we need this method because Requirements_Backend does not extend Object!
-     * @param string
-     */
-    public static function set_webpack_variables_file_location($str)
-    {
-        self::$webpack_variables_file_location = $tr;
-    }
 
     /**
      * e.g. /app/javascript/test.js
@@ -60,45 +52,10 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
     private static $files_to_ignore = array();
 
     /**
-     * we need this method because Requirements_Backend does not extend Object!
-     * @var array $array
-     */
-    public static function set_files_to_ignore($array)
-    {
-        self::$files_to_ignore = $array;
-    }
-
-    /**
-     * @return array
-     */
-    public static function get_files_to_ignore()
-    {
-        return self::$files_to_ignore = $array;
-    }
-
-    /**
      * @var string
      */
     private static $working_theme_folder_extension = "app";
 
-    /**
-     * we need this method because Requirements_Backend does not extend Object!
-     * @var string $string
-     */
-    public static function set_working_theme_folder_extension($string)
-    {
-        self::$working_theme_folder_extension = $string;
-    }
-
-
-    /**
-     * we need this method because Requirements_Backend does not extend Object!
-     * @return string
-     */
-    public static function get_working_theme_folder_extension()
-    {
-        return self::$working_theme_folder_extension = $string;
-    }
 
     /**
      * @var string
@@ -106,27 +63,9 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
     private static $copy_css_to_folder = "src/raw_requirements/css";
 
     /**
-     * we need this method because Requirements_Backend does not extend Object!
-     * @var string $string
-     */
-    public static function set_copy_css_to_folder($string)
-    {
-        self::$copy_css_to_folder = $string;
-    }
-
-    /**
      * @var string
      */
     private static $copy_js_to_folder = "src/raw_requirements/js";
-
-    /**
-     * we need this method because Requirements_Backend does not extend Object!
-     * @param string $string
-     */
-    public static function set_copy_js_to_folder($string)
-    {
-        self::$copy_js_to_folder = $string;
-    }
 
     /**
      * @var array
@@ -134,46 +73,9 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
     private static $urls_to_exclude = array();
 
     /**
-     * we need this method because Requirements_Backend does not extend Object!
-     * @param array $array
-     */
-    public static function set_urls_to_exclude($a)
-    {
-        self::$urls_to_exclude = $a;
-    }
-
-    /**
-     *
-     * @return array
-     */
-    public static function get_urls_to_exclude()
-    {
-        return self::$urls_to_exclude;
-    }
-
-    /**
      * @var bool
      */
     private static $force_update = true;
-
-    /**
-     *
-     * @param bool
-     */
-    public static function set_force_update($bool)
-    {
-        self::$force_update = $bool;
-    }
-
-
-    /**
-     *
-     * @return bool
-     */
-    public static function get_force_update($bool)
-    {
-        return self::$force_update;
-    }
 
     /**
      * Whether to add caching query params to the requests for file-based requirements.
@@ -236,14 +138,10 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
 
 
     /**
-     * Update the given HTML content with the appropriate include tags for the registered
-     * requirements. Needs to receive a valid HTML/XHTML template in the $content parameter,
-     * including a head and body tag.
      *
-     * @param string $templateFile No longer used, only retained for compatibility
-     * @param string $content      HTML content that has already been parsed from the $templateFile
-     *                             through {@link SSViewer}
-     * @return string HTML content augmented with the requirements tags
+     * @param string $content
+     *
+     * @return string HTML content
      */
     public function includeInHTML($content)
     {
@@ -261,12 +159,12 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
                 $requirementsJSFiles = array();
 
                 // Combine files - updates $this->javascript and $this->css
-                $this->process_combined_files();
+                $this->processCombinedFiles();
                 $isDev = Director::isDev();
                 foreach (array_diff_key($this->javascript, $this->blocked) as $file => $dummy) {
                     $ignore = in_array($file, self::$files_to_ignore) ? true : false;
                     if ($isDev || $ignore) {
-                        $path = Convert::raw2xml($this->path_for_file($file));
+                        $path = Convert::raw2xml($this->pathForFile($file));
                         if ($path) {
                             if ($isDev) {
                                 $requirementsJSFiles[$path] = $path;
@@ -290,7 +188,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
                 foreach (array_diff_key($this->css, $this->blocked) as $file => $params) {
                     $ignore = in_array($file, self::$files_to_ignore) ? true : false;
                     if ($isDev || $ignore) {
-                        $path = Convert::raw2xml($this->path_for_file($file));
+                        $path = Convert::raw2xml($this->pathForFile($file));
                         if ($path) {
                             $media = (isset($params['media']) && !empty($params['media'])) ? $params['media'] : "";
                             if ($isDev) {
@@ -395,7 +293,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
      */
     public static function themed_request()
     {
-        return Config::inst()->get(SSViewer::class, 'theme') && Config::inst()->get(SSViewer::class, 'theme_enabled') ? true : false;
+        return true; Config::inst()->get(SSViewer::class, 'current_theme') && Config::inst()->get(SSViewer::class, 'theme_enabled') ? true : false;
     }
 
     /**
