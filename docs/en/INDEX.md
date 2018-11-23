@@ -4,9 +4,12 @@ This module refines the Requirements class for Silverstripe. It moves all your C
 
 ## what it does
 
-You need to add two includes to your `Page.ss` template:
+The `customScripts` and `customCSS` calls work as normal. On the other hand, any css files included are copied to a special directory (for inclusion in a `webpack`) instead of being included in the HTML output.
+
+You can then include your webpack files by adding two includes to your `Page.ss` template:
  * WebpackCSSLinks
  * WebpackJSLinks
+ 
  Your html template should look something like this:
  ```html
  <!doctype html>
@@ -28,7 +31,6 @@ You need to add two includes to your `Page.ss` template:
  </html>
  ```
 
-The `customScripts` and `customCSS` calls work as normal. On the other hand, any css files included are copied to a special directory (for inclusion in a `webpack`) instead of being included in the HTML output.
 
 _*DO NOT CHANGE THE FILES IN THESE COLLATED REQUIREMENTS FOLDERS AS THEY WILL BE OVERWRITTEN BY NEW VERSIONS FROM THE MODULES / REGULAR THEME FOLDERS*_
 
