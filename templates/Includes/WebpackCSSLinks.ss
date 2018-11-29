@@ -1,1 +1,1 @@
-<% if $IsNotWebpackDevServer %><link href="{$WebpackBaseURL}{$ThemeDir}_{$WebpackDistributionFolderExtension}/style.css?x=$WebpackFileHash(CSS)" rel="stylesheet" type="text/css"  /><% end_if %>
+<link href="{$ThemeDir}_{$WebpackDistributionFolderExtension}/app.css?x=$WebpackFileHash(app.css)" rel="stylesheet" type="text/css"  />

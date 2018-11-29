@@ -124,16 +124,10 @@ class WebpackPageControllerExtension extends Extension
      * @param string $type should be set to JS or CSS
      * @return string
      */
-    public function WebpackFileHash($type = 'JS')
+    public function WebpackFileHash($name = 'app.css')
     {
         $base = Director::baseFolder();
-        if ($type === 'JS') {
-            $file = 'bundle.js';
-        } elseif ($type === 'CSS') {
-            $file = 'style.css';
-        } else {
-            user_error('Please specify JS or CSS, '.$type.' specified.');
-        }
+        $file = $name;
         $fullFile = $base.'/'.THEMES_DIR . "/" . Config::inst()->get(SSViewer::class, 'current_theme').'_'.$this->WebpackDistributionFolderExtension().'/'.$file;
 
         return @filemtime($fullFile);
