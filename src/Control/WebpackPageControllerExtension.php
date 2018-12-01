@@ -2,16 +2,10 @@
 
 namespace Sunnysideup\WebpackRequirementsBackend\Control;
 
-
-
-
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\View\SSViewer;
 use SilverStripe\Core\Extension;
-
-
-
 
 class WebpackPageControllerExtension extends Extension
 {

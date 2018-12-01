@@ -2,10 +2,6 @@
 
 namespace Sunnysideup\WebpackRequirementsBackend\View;
 
-
-
-
-
 use Exception;
 
 
@@ -27,7 +23,6 @@ use SilverStripe\View\Requirements_Backend;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Config\Configurable;
 
-
 /**
  * Requirements_Backend_For_Webpack::set_files_to_ignore(
  *  'app/javascript/myfile.js';
@@ -37,7 +32,6 @@ use SilverStripe\Core\Config\Configurable;
  */
 class Requirements_Backend_For_Webpack extends Requirements_Backend implements Flushable
 {
-
     use Configurable;
 
     /**
@@ -293,7 +287,8 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
      */
     public static function themed_request()
     {
-        return true; Config::inst()->get(SSViewer::class, 'current_theme') && Config::inst()->get(SSViewer::class, 'theme_enabled') ? true : false;
+        return true;
+        Config::inst()->get(SSViewer::class, 'current_theme') && Config::inst()->get(SSViewer::class, 'theme_enabled') ? true : false;
     }
 
     /**
@@ -421,10 +416,9 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
     {
         $combinedFolder = $this->getCombinedFilesFolder();
         if ($combinedFolder) {
-            if($this->getAssetHandler()) {
+            if ($this->getAssetHandler()) {
                 $this->getAssetHandler()->removeContent($combinedFolder);
             }
         }
     }
-
 }
