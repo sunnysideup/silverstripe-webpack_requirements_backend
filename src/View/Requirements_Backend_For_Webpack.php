@@ -416,4 +416,15 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
             }
         }
     }
+
+    public function deleteAllCombinedFiles()
+    {
+        $combinedFolder = $this->getCombinedFilesFolder();
+        if ($combinedFolder) {
+            if($this->getAssetHandler()) {
+                $this->getAssetHandler()->removeContent($combinedFolder);
+            }
+        }
+    }
+
 }
