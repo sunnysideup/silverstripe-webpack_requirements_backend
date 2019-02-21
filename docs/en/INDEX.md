@@ -20,11 +20,6 @@ The `customScripts` and `customCSS` calls work as normal. On the other hand, any
      <% include WebpackCSSLinks %>
  </head>
  <body>
-     <script
-         src="https://code.jquery.com/jquery-3.3.1.min.js"
-         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-         crossorigin="anonymous">
-     </script>
      <% include WebpackJSLinks %>
  </body>
  </html>

@@ -287,7 +287,11 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
      */
     public static function themed_request()
     {
-        Config::inst()->get(SSViewer::class, 'current_theme') && Config::inst()->get(SSViewer::class, 'theme_enabled') ? true : false;
+        if(Director::isDev() && isset($_GET['showrequirements'])) {
+            return false;
+        } else {
+            return Config::inst()->get(SSViewer::class, 'current_theme') && Config::inst()->get(SSViewer::class, 'theme_enabled') ? true : false;
+        }
     }
 
     /**
