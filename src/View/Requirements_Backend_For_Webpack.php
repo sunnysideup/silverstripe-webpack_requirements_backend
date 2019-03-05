@@ -113,7 +113,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
             }
         }
         if (! $v) {
-            $v = Config::inst()->get(SSViewer::class, 'current_theme');
+            $v = Config::inst()->get(SSViewer::class, 'theme');
         }
 
         if (! $v) {
