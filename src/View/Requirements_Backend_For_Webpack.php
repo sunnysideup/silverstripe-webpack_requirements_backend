@@ -288,7 +288,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
     {
 
         if(
-            Config::inst()->get(SSViewer::class, 'current_theme')
+            Config::inst()->get(SSViewer::class, 'theme')
             &&
             Config::inst()->get(SSViewer::class, 'theme_enabled')
         ) {
