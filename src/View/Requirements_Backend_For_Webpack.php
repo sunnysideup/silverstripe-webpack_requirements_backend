@@ -418,12 +418,11 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
                     Filesystem::makeFolder($folder);
                 }
                 $files = [
-                    $base.$themeFolderForCustomisation.'src/main.js',
-                    $base.$themeFolderForCustomisation.'src/sass/style.sass'
+                    $base.$themeFolderForCustomisation.'src/main.js'
                 ];
                 foreach ($files as $file) {
                     if (!file_exists($file)) {
-                        file_put_contents($file, '//add your customisations in this file');
+                        @file_put_contents($file, '//add your customisations in this file');
                     }
                 }
 
