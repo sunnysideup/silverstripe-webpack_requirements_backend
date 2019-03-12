@@ -122,7 +122,7 @@ class WebpackPageControllerExtension extends Extension
     {
         $base = Director::baseFolder();
         $file = $name;
-        $fullFile = $base.'/'.THEMES_DIR . "/" . Config::inst()->get(SSViewer::class, 'current_theme').'_'.$this->WebpackDistributionFolderExtension().'/'.$file;
+        $fullFile = $base.'/'.THEMES_DIR . "/" . Config::inst()->get(SSViewer::class, 'theme').'_'.$this->WebpackDistributionFolderExtension().'/'.$file;
 
         return @filemtime($fullFile);
     }
