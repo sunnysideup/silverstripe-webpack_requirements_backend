@@ -314,6 +314,8 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
      */
     protected function moveFileToRequirementsFolder($fileLocation, $folderLocation)
     {
+        $fileLocationArray = explode('?', $fileLocation);
+        $fileLocation = $fileLocationArray[0];
         $base = Director::baseFolder();
         $folderLocationWithBase = $base . $folderLocation;
         Filesystem::makeFolder($folderLocationWithBase);
