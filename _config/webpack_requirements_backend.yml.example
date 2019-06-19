@@ -1,6 +1,6 @@
 # you dont usually need to set this, but you may need them!
 
-WebpackPageControllerExtension:
+Sunnysideup\WebpackRequirementsBackend\Control\WebpackPageControllerExtension:
   webpack_enabled_themes: []
   is_webpack_server: false
   webpack_socket_server: localhost
@@ -8,7 +8,7 @@ WebpackPageControllerExtension:
   webpack_port: 3000
   webpack_distribution_folder_extension: dist
 
-Requirements_Backend_For_Webpack:
+Sunnysideup\WebpackRequirementsBackend\View\Requirements_Backend_For_Webpack:
   webpack_variables_file_location: ''
   files_to_ignore: []
   working_theme_folder_extension: 'app'

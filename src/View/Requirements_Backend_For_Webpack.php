@@ -24,6 +24,7 @@ use SilverStripe\View\Requirements_Backend;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\Dev\TaskRunner;
 
 /**
  * Requirements_Backend_For_Webpack::set_files_to_ignore(
@@ -286,7 +287,6 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
      */
     public static function themed_request()
     {
-
         if(
             Config::inst()->get(SSViewer::class, 'theme')
             &&
@@ -294,8 +294,10 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
         ) {
             if (Controller::has_curr()) {
                 $controller = Controller::curr();
-
                 if ($controller instanceof LeftAndMain) {
+                    return false;
+                }
+                if($controller instanceof TaskRunner) {
                     return false;
                 }
 
