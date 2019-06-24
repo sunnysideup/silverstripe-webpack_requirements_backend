@@ -32,5 +32,10 @@
     },
     "suggest": {
         "sunnysideup/sswebpack_engine_only": "Add webpack itself"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sunnysideup\\WebpackRequirementsBackend\\": "src/"
+        }
     }
 }
