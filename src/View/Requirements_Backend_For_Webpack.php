@@ -374,9 +374,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
                     echo '
                     <br />
                     Please run <br />
-                    sudo touch '.$fileLocation.'<br />
-                    sudo chown www-data '.$fileLocation.'<br />
-                    sudo chmod 0777 '.$fileLocation.'';
+                    sudo touch '.$fileLocation.' && sudo chown www-data '.$fileLocation.' && sudo chmod 0775 '.$fileLocation.'';
                     user_error('
                         Trying to write '.$line.' to '.$fileLocation.'<br />
                         '
