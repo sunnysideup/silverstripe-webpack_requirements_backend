@@ -46,7 +46,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
      * e.g. /app/javascript/test.js
      * @var array
      */
-    private static $files_to_ignore = array();
+    private static $files_to_ignore = [];
 
     /**
      * @var string
@@ -67,7 +67,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
     /**
      * @var array
      */
-    private static $urls_to_exclude = array();
+    private static $urls_to_exclude = [];
 
     /**
      * @var bool
@@ -152,8 +152,8 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
             if ($hasHead && $hasRequirements) {
                 $requirements = '';
                 $jsRequirements = '';
-                $requirementsCSSFiles = array();
-                $requirementsJSFiles = array();
+                $requirementsCSSFiles = [];
+                $requirementsJSFiles = [];
 
                 // Combine files - updates $this->javascript and $this->css
                 $this->processCombinedFiles();
@@ -414,13 +414,13 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
                     $base.$themeFolderForCustomisation.'src/sass',
                     $base.$themeFolderForCustomisation.''.Config::inst()->get(self::class,'copy_css_to_folder'),
                     $base.$themeFolderForCustomisation.''.Config::inst()->get(self::class,'copy_js_to_folder'),
-                    $base.'/'.THEMES_DIR . "/" . $theme.'_'.$distributionFolderExtension
+                    $base.'/'.THEMES_DIR . "/" . $theme.'_'.$distributionFolderExtension,
                 ];
                 foreach ($rawFolders as $folder) {
                     Filesystem::makeFolder($folder);
                 }
                 $files = [
-                    $base.$themeFolderForCustomisation.'src/main.js'
+                    $base.$themeFolderForCustomisation.'src/main.js',
                 ];
                 foreach ($files as $file) {
                     if (!file_exists($file)) {
@@ -431,7 +431,7 @@ class Requirements_Backend_For_Webpack extends Requirements_Backend implements F
                 $varArray = [
                     'themeName' => self::webpack_current_theme_as_set_in_db(),
                     'devWebAddress' => isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : Director::protocolAndHost(),
-                    'distributionFolder' => self::webpack_current_theme_as_set_in_db().'_'.Config::inst()->get(WebpackPageControllerExtension::class, 'webpack_distribution_folder_extension')
+                    'distributionFolder' => self::webpack_current_theme_as_set_in_db().'_'.Config::inst()->get(WebpackPageControllerExtension::class, 'webpack_distribution_folder_extension'),
                 ];
                 $str = 'module.exports = '.json_encode($varArray).'';
                 @file_put_contents($base.'/'.Config::inst()->get(self::class,'webpack_variables_file_location'), $str);
