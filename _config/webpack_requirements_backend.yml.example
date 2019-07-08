@@ -8,7 +8,7 @@ Sunnysideup\WebpackRequirementsBackend\Control\WebpackPageControllerExtension:
   webpack_port: 3000
   webpack_distribution_folder_extension: dist
 
-Sunnysideup\WebpackRequirementsBackend\View\Requirements_Backend_For_Webpack:
+Sunnysideup\WebpackRequirementsBackend\View\RequirementsBackendForWebpack:
   webpack_variables_file_location: ''
   files_to_ignore: []
   working_theme_folder_extension: 'app'

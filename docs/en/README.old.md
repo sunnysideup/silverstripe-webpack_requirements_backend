@@ -10,8 +10,8 @@ use:
 
 ```php
 <?php
-Requirements_Backend_For_Webpack::set_copy_css_to_folder("themes/base/source/css/requirements");
-Requirements_Backend_For_Webpack::set_copy_js_to_folder("themes/base/source/js/requirements");
+RequirementsBackendForWebpack::set_copy_css_to_folder("themes/base/source/css/requirements");
+RequirementsBackendForWebpack::set_copy_js_to_folder("themes/base/source/js/requirements");
 
  ```
 to set the folders where the required files are saved.
