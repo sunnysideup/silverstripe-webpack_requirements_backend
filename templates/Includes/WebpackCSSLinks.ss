@@ -1,1 +1,3 @@
-<link href="{$ThemeDir}_{$WebpackDistributionFolderExtension}/app.css?x=$WebpackFileHash(app.css)" rel="stylesheet" type="text/css"  />
+<% if $AppCSSLocation %>
+<link href="$AppCSSLocation" rel="stylesheet" type="text/css"  />
+<% end_if %>
