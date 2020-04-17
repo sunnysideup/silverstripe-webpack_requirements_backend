@@ -1,3 +1,7 @@
-<script src="{$ThemeDir}_{$WebpackDistributionFolderExtension}/vendors~app.js?x=$WebpackFileHash(vendors~app.js)" charset="utf-8"></script>
+<% if $AppVendorJSLocation %>
+<script src="$AppVendorJSLocation" charset="utf-8"></script>
+<% end_if %>
 
-<script src="{$ThemeDir}_{$WebpackDistributionFolderExtension}/app.js?x=$WebpackFileHash(app.js)" charset="utf-8"></script>
+<% if $AppJSLocation %>
+<script src="$AppJSLocation" charset="utf-8"></script>
+<% end_if %>
