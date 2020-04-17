@@ -105,8 +105,35 @@ class WebpackPageControllerExtension extends Extension
         return $webpackServer;
     }
 
+    public function AppCSSLocation()
+    {
+        return $this->getWebpackFile('app.css');
+    }
+
+    public function AppVendorJSLocation() : string
+    {
+        return $this->getWebpackFile('vendors~app.js');
+    }
+
+    public function AppJSLocation() : string
+    {
+        return $this->getWebpackFile('app.js');
+    }
+
+    protected function getWebpackFile(string $file) : string
+    {
+        $fileLocation = $this->WebpackFolderOnFileSystem(true) . '/' . $file;
+        if (file_exists($fileLocation)) {
+            $hash = filemtime($fileLocation);
+            $frontendFile = $this->WebpackFolderOnFrontEnd() . '/' . $file . '?x=' . $hash;
+            return $frontendFile;
+        }
+        return '';
+    }
+
+
     /**
-     * @return string
+     * @return string e.g. dist
      */
     public function WebpackDistributionFolderExtension()
     {
@@ -115,15 +142,26 @@ class WebpackPageControllerExtension extends Extension
 
     /**
      *
-     * @param string $type should be set to JS or CSS
-     * @return string
+     * @return string e.g. resources/themes/app_dist
      */
-    public function WebpackFileHash($name = 'app.css')
+    public function WebpackFolderOnFrontEnd() : string
     {
-        $base = Director::baseFolder();
-        $file = $name;
-        $fullFile = $base.'/'.THEMES_DIR . "/" . Config::inst()->get(SSViewer::class, 'theme').'_'.$this->WebpackDistributionFolderExtension().'/'.$file;
+        return ModuleResourceLoader::resourceURL($this->WebpackFolderOnFileSystem(false));
+    }
 
-        return @filemtime($fullFile);
+    /**
+     *
+     * @param  boolean $withBase include baseFolder?
+     * @return string return /var/www/html/themes/app_dist
+     */
+    public function WebpackFolderOnFileSystem(?bool $withBase = true) : string
+    {
+        $location = '';
+        if ($withBase) {
+            $location .= Director::baseFolder() . '/';
+        }
+        $location .= THEMES_DIR . "/" . Config::inst()->get(SSViewer::class, 'theme').'_'.$this->WebpackDistributionFolderExtension();
+
+        return $location;
     }
 }
