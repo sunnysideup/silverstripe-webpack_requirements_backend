@@ -106,7 +106,7 @@ class WebpackPageControllerExtension extends Extension
         return $webpackServer;
     }
 
-    public function AppCSSLocation()
+    public function AppCSSLocation() : string
     {
         return $this->getWebpackFile('app.css');
     }
@@ -136,7 +136,7 @@ class WebpackPageControllerExtension extends Extension
     /**
      * @return string e.g. dist
      */
-    public function WebpackDistributionFolderExtension()
+    public function WebpackDistributionFolderExtension(): string
     {
         return $this->owner->Config()->get('webpack_distribution_folder_extension');
     }
