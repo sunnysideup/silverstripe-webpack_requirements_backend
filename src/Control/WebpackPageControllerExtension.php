@@ -123,12 +123,16 @@ class WebpackPageControllerExtension extends Extension
 
     protected function getWebpackFile(string $file) : string
     {
-        $fileLocation = $this->WebpackFolderOnFileSystem(true) . '/' . $file;
-        if (file_exists($fileLocation)) {
-            $hash = filemtime($fileLocation);
-            $frontendFile = $this->WebpackFolderOnFrontEnd() . '/' . $file . '?x=' . $hash;
-            return $frontendFile;
+        foreach (['',  '.gz'] as $extension) {
+            $fileLocation = $this->WebpackFolderOnFileSystem(true) . '/' . $file . $extension;
+            if (file_exists($fileLocation)) {
+                $hash = filemtime($fileLocation);
+                $frontendFile = $this->WebpackFolderOnFrontEnd() . '/' . $file . '?x=' . $hash;
+
+                return $frontendFile;
+            }
         }
+
         return '';
     }
 
