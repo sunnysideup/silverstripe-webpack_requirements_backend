@@ -17,17 +17,17 @@ class WebpackPageControllerExtension extends Extension
 
     public function AppCSSLocation(): string
     {
-        return $this->getWebpackFile($this->Config()->get('distilled_file_base_name') . '.css');
+        return $this->getWebpackFile($this->owner->Config()->get('distilled_file_base_name') . '.css');
     }
 
     public function AppVendorJSLocation(): string
     {
-        return $this->getWebpackFile('vendors~' . $this->Config()->get('distilled_file_base_name') . '.js');
+        return $this->getWebpackFile('vendors~' . $this->owner->Config()->get('distilled_file_base_name') . '.js');
     }
 
     public function AppJSLocation(): string
     {
-        return $this->getWebpackFile($this->Config()->get('distilled_file_base_name') . '.js');
+        return $this->getWebpackFile($this->owner->Config()->get('distilled_file_base_name') . '.js');
     }
 
     /**
@@ -46,8 +46,15 @@ class WebpackPageControllerExtension extends Extension
         return Injector::inst()->get(Configuration::class)->IsWebpackDevServer();
     }
 
+
+    public function WebpackFolderOnFrontEnd(string $file): string
+    {
+        return Injector::inst()->get(Configuration::class)->WebpackFolderOnFrontEnd();
+    }
+
     protected function getWebpackFile(string $file): string
     {
         return Injector::inst()->get(Configuration::class)->getWebpackFile($file);
     }
+
 }
