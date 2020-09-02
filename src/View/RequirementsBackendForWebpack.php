@@ -2,80 +2,23 @@
 
 namespace Sunnysideup\WebpackRequirementsBackend\View;
 
-use Exception;
-
-use RecursiveIteratorIterator;
-use RecursiveDirectoryIterator;
-use SilverStripe\Security\Security;
-use SilverStripe\SiteConfig\SiteConfig;
-use SilverStripe\Core\Config\Config;
-use SilverStripe\View\SSViewer;
-use SilverStripe\Control\Director;
-use SilverStripe\Core\Convert;
-use SilverStripe\Control\Controller;
-use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Assets\Filesystem;
-use Sunnysideup\WebpackRequirementsBackend\Control\WebpackPageControllerExtension;
-use SilverStripe\View\Requirements_Backend;
-use SilverStripe\Core\Flushable;
-use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\TaskRunner;
+use SilverStripe\View\Requirements_Backend;
+use SilverStripe\View\SSViewer;
+use Sunnysideup\WebpackRequirementsBackend\Api\Configuration;
+use Sunnysideup\WebpackRequirementsBackend\Api\NoteRequiredFiles;
 
-/**
- * RequirementsBackendForWebpack::set_files_to_ignore(
- *  'app/javascript/myfile.js';
- * );
- *
- *
- */
-class RequirementsBackendForWebpack extends Requirements_Backend implements Flushable
+class RequirementsBackendForWebpack extends Requirements_Backend
 {
     use Configurable;
-
-    private static $enabled = true;
-
-    /**
-     * @var string
-     */
-    private static $webpack_variables_file_location = 'themes/webpack-variables.js';
-
-    /**
-     * e.g. /app/javascript/test.js
-     * @var array
-     */
-    private static $files_to_ignore = [];
-
-    /**
-     * @var string
-     */
-    private static $working_theme_folder_extension = "app";
-
-
-    /**
-     * @var string
-     */
-    private static $copy_css_to_folder = "src/raw_requirements/css";
-
-    /**
-     * @var string
-     */
-    private static $copy_js_to_folder = "src/raw_requirements/js";
-
-    /**
-     * @var array
-     */
-    private static $urls_to_exclude = [];
-
-    /**
-     * @var bool
-     */
-    private static $force_update = true;
-
-    /**
-     * @var bool
-     */
-    private static $save_requirements_in_folder = false;
 
     /**
      * Whether to add caching query params to the requests for file-based requirements.
@@ -94,7 +37,6 @@ class RequirementsBackendForWebpack extends Requirements_Backend implements Flus
      */
     protected $combined_files_enabled = false;
 
-
     /**
      * Force the JavaScript to the bottom of the page, even if there's a script tag in the body already
      *
@@ -102,56 +44,35 @@ class RequirementsBackendForWebpack extends Requirements_Backend implements Flus
      */
     protected $force_js_to_bottom = true;
 
-
     /**
-     * @return string
+     * e.g. /app/javascript/test.js
+     * @var array
      */
-    protected static function webpack_current_theme_as_set_in_db()
-    {
-        $v = null;
-        if (Security::database_is_ready()) {
-            try {
-                $v = SiteConfig::current_site_config()->Theme;
-            } catch (Exception $e) {
-                //dont worry!
-            }
-        }
-        if (! $v) {
-            $v = Config::inst()->get(SSViewer::class, 'theme');
-        }
-
-        if (! $v) {
-            user_error('We recommend you set a theme as soon as possible.', E_USER_NOTICE);
-        }
-
-        return $v;
-    }
-
+    private static $files_to_ignore = [];
 
     /**
-     * @return string
+     * @var array
      */
-    protected static function webpack_theme_folder_for_customisation()
-    {
-        return '/themes/'.self::webpack_current_theme_as_set_in_db().'_'.Config::inst()->get(self::class,'working_theme_folder_extension').'/';
-    }
-
+    private static $urls_to_exclude = [];
 
     /**
-     *
+     * @var bool
+     */
+    private static $force_update = true;
+
+    /**
      * @param string $content
      *
      * @return string HTML content
      */
     public function includeInHTML($content)
     {
-        if (self::themed_request()) {
-
+        if (self::is_themed_request()) {
             //=====================================================================
             // start copy-ish from parent class
 
-            $hasHead = (strpos($content, '</head>') !== false || strpos($content, '</head ') !== false) ? true : false;
-            $hasRequirements = ($this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags) ? true: false;
+            $hasHead = strpos($content, '</head>') !== false || strpos($content, '</head ') !== false ? true : false;
+            $hasRequirements = $this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags ? true : false;
             if ($hasHead && $hasRequirements) {
                 $requirements = '';
                 $jsRequirements = '';
@@ -161,16 +82,17 @@ class RequirementsBackendForWebpack extends Requirements_Backend implements Flus
                 // Combine files - updates $this->javascript and $this->css
                 $this->processCombinedFiles();
                 $isDev = Director::isDev();
-                foreach (array_diff_key($this->javascript, $this->blocked) as $file => $dummy) {
-                    $ignore = in_array($file, Config::inst()->get(self::class,'files_to_ignore')) ? true : false;
+                $toIgnore = $this->Config()->get('files_to_ignore');
+                foreach (array_keys(array_diff_key($this->javascript, $this->blocked)) as $file) {
+                    $ignore = in_array($file, $toIgnore, true);
                     if ($isDev || $ignore) {
                         $path = Convert::raw2xml($this->pathForFile($file));
                         if ($path) {
                             if ($isDev) {
                                 $requirementsJSFiles[$path] = $path;
                             }
-                            if (in_array($file, Config::inst()->get(self::class,'files_to_ignore'))) {
-                                $jsRequirements .= "<script type=\"text/javascript\" src=\"$path\"></script>\n";
+                            if ($ignore) {
+                                $jsRequirements .= "<script type=\"text/javascript\" src=\"${path}\"></script>\n";
                             }
                         }
                     }
@@ -180,36 +102,36 @@ class RequirementsBackendForWebpack extends Requirements_Backend implements Flus
                 if ($this->customScript) {
                     foreach (array_diff_key($this->customScript, $this->blocked) as $script) {
                         $jsRequirements .= "<script type=\"text/javascript\">\n//<![CDATA[\n";
-                        $jsRequirements .= "$script\n";
+                        $jsRequirements .= "${script}\n";
                         $jsRequirements .= "\n//]]>\n</script>\n";
                     }
                 }
 
                 foreach (array_diff_key($this->css, $this->blocked) as $file => $params) {
-                    $ignore = in_array($file, Config::inst()->get(self::class,'files_to_ignore')) ? true : false;
+                    $ignore = in_array($file, $this->Config()->get('files_to_ignore'), true);
                     if ($isDev || $ignore) {
                         $path = Convert::raw2xml($this->pathForFile($file));
                         if ($path) {
-                            $media = (isset($params['media']) && !empty($params['media'])) ? $params['media'] : "";
+                            $media = isset($params['media']) && ! empty($params['media']) ? $params['media'] : '';
                             if ($isDev) {
-                                $requirementsCSSFiles[$path."_".$media] = $path;
+                                $requirementsCSSFiles[$path . '_' . $media] = $path;
                             }
                             if ($ignore) {
                                 if ($media !== '') {
                                     $media = " media=\"{$media}\"";
                                 }
-                                $requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$path\" />\n";
+                                $requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"${path}\" />\n";
                             }
                         }
                     }
                 }
 
                 foreach (array_diff_key($this->customCSS, $this->blocked) as $css) {
-                    $requirements .= "<style type=\"text/css\">\n$css\n</style>\n";
+                    $requirements .= "<style type=\"text/css\">\n${css}\n</style>\n";
                 }
 
                 foreach (array_diff_key($this->customHeadTags, $this->blocked) as $customHeadTag) {
-                    $requirements .= "$customHeadTag\n";
+                    $requirements .= "${customHeadTag}\n";
                 }
 
                 // Remove all newlines from code to preserve layout
@@ -217,45 +139,40 @@ class RequirementsBackendForWebpack extends Requirements_Backend implements Flus
 
                 // Forcefully put the scripts at the bottom of the body instead of before the first
                 // script tag.
-                $content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);
+                $content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . '\\1', $content);
 
                 // Put CSS at the bottom of the head
-                $content = preg_replace("/(<\/head>)/i", $requirements . "\\1", $content);
+                $content = preg_replace("/(<\/head>)/i", $requirements . '\\1', $content);
 
                 //end copy-ish from parent class
                 //=====================================================================
 
                 //copy files ...
-                if (self::can_save_requirements()) {
-                    $themeFolderForSavingFiles = self::webpack_theme_folder_for_customisation();
+                if (NoteRequiredFiles::can_save_requirements()) {
                     //css
-                    $cssFolder = $themeFolderForSavingFiles.Config::inst()->get(self::class,'copy_css_to_folder');
-
                     foreach ($requirementsCSSFiles as $cssFile) {
-                        $this->moveFileToRequirementsFolder($cssFile, $cssFolder);
+                        Injector::inst()->get(NoteRequiredFiles::class)->noteFileRequired($cssFile, 'css');
                     }
                     //js
-                    $jsFolder = $themeFolderForSavingFiles.Config::inst()->get(self::class,'copy_js_to_folder');
                     foreach ($requirementsJSFiles as $jsFile) {
-                        $this->moveFileToRequirementsFolder($jsFile, $jsFolder);
+                        Injector::inst()->get(NoteRequiredFiles::class)->noteFileRequired($jsFile, 'js');
                     }
                 }
             }
             return $content;
-        } else {
-            return parent::includeInHTML($content);
         }
+        return parent::includeInHTML($content);
     }
 
     /**
      * Attach requirements inclusion to X-Include-JS and X-Include-CSS headers on the given
      * HTTP Response
      *
-     * @param SS_HTTPResponse $response
+     * @param HTTPResponse $response
      */
-    public function include_in_response(HTTPResponse $response)
+    public function includeInResponse(HTTPResponse $response)
     {
-        if (self::themed_request()) {
+        if (self::is_themed_request()) {
             //do nothing
         } else {
             return parent::includeInResponse($response);
@@ -265,44 +182,17 @@ class RequirementsBackendForWebpack extends Requirements_Backend implements Flus
     }
 
     /**
-     *
-     *
-     *
      * @return bool
      */
-    public static function can_save_requirements()
+    public static function is_themed_request(): bool
     {
-        if(Config::inst()->get(self::class,'save_requirements_in_folder')) {
-            if (Director::isDev()) {
-                if (self::themed_request()) {
-                    if (self::webpack_current_theme_as_set_in_db()) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     *
-     *
-     * @return bool
-     */
-    public static function themed_request()
-    {
-        if(
-            Config::inst()->get(SSViewer::class, 'theme')
+        if (Config::inst()->get(SSViewer::class, 'theme_enabled')
             &&
-            Config::inst()->get(SSViewer::class, 'theme_enabled')
-            &&
-            Config::inst()->get(self::class, 'enabled')
+            Config::inst()->get(Configuration::class, 'enabled')
         ) {
             if (Controller::has_curr()) {
                 $controller = Controller::curr();
-                if (
-                    $controller instanceof LeftAndMain ||
+                if ($controller instanceof LeftAndMain ||
                     $controller instanceof TaskRunner
                 ) {
                     return false;
@@ -315,144 +205,13 @@ class RequirementsBackendForWebpack extends Requirements_Backend implements Flus
         return false;
     }
 
-    /**
-     *
-     * @param  string $fileLocation
-     * @param  string $folderLocation
-     *
-     */
-    protected function moveFileToRequirementsFolder($fileLocation, $folderLocation)
-    {
-        $fileLocationArray = explode('?', $fileLocation);
-        $fileLocation = $fileLocationArray[0];
-        $base = Director::baseFolder();
-        $folderLocationWithBase = $base . $folderLocation;
-        Filesystem::makeFolder($folderLocationWithBase);
-        if (!file_exists($folderLocationWithBase)) {
-            user_error('Please update RequirementsBackendForWebpack for the right folder or create '.$folderLocationWithBase);
-        }
-        if (strpos($fileLocation, "//") !== false) {
-            $logFile = $folderLocationWithBase."/TO.INCLUDE.FROM.PAGE.SS.FILE.log";
-            $line = $_SERVER['REQUEST_URI']." | ".$fileLocation;
-            $this->addLinesToFile($logFile, $fileLocation);
-        } else {
-            $from = $fileLocation;
-            $to = basename($fileLocation);
-            $line = '@import \'site'.$from.'\'';
-            $logFile = $folderLocationWithBase."/TO.INCLUDE.USING.WEBPACK.METHODS.log";
-            $this->addLinesToFile($logFile, $line);
-            if (in_array($fileLocation, Config::inst()->get(self::class,'files_to_ignore'))) {
-                //to be completed ...
-            } else {
-                // if (! file_exists($to) || Config::inst()->get(self::class,'force_update')) {
-                //     copy($from, $to);
-                // }
-            }
-        }
-    }
-
-    protected function copyIfYouCan($from, $to, $count = 0)
-    {
-        try {
-            copy($from, $to);
-        } catch (Exception $e) {
-            $count++;
-            $this->makeFolderWritable();
-            if ($count < 3) {
-                $this->copyIfYouCan($from, $to, $count);
-            }
-        }
-    }
-
-    protected function addLinesToFile($fileLocation, $line, $count = 0)
-    {
-        $line .= "\n";
-        try {
-            $lines = [];
-            if (file_exists($fileLocation)) {
-                $lines = file($fileLocation);
-            }
-            if (! in_array($line, $lines)) {
-                //last catch!
-                if (is_writable($fileLocation)) {
-                    $handle = fopen($fileLocation, 'a');
-                    fwrite($handle, $line);
-                } else {
-                    echo '
-                    <br />
-                    Please run <br />
-                    sudo touch '.$fileLocation.' && sudo chown www-data '.$fileLocation.' && sudo chmod 0775 '.$fileLocation.'';
-                    user_error('
-                        Trying to write '.$line.' to '.$fileLocation.'<br />
-                        '
-                    );
-                }
-            }
-        } catch (Exception $e) {
-            $this->makeFolderWritable();
-            $count++;
-            if ($count < 3) {
-                $this->addLinesToFile($fileLocation, $lines, $count);
-            }
-        }
-    }
-
-    protected function makeFolderWritable($fileLocation)
-    {
-        if (file_exists($fileLocation)) {
-            $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(dirname($fileLocation)));
-            foreach ($iterator as $item) {
-                chmod($item, '0664');
-            }
-        }
-    }
-
-
-    public static function flush()
-    {
-        if (Director::isDev()) {
-            $theme = self::webpack_current_theme_as_set_in_db();
-            $distributionFolderExtension = Config::inst()->get(WebpackPageControllerExtension::class, 'webpack_distribution_folder_extension');
-            if ($theme && self::can_save_requirements()) {
-                //make raw requirements writeable
-                $base = Director::baseFolder();
-                $themeFolderForCustomisation = self::webpack_theme_folder_for_customisation();
-                $rawFolders = [
-                    $base.$themeFolderForCustomisation.'src/sass',
-                    $base.$themeFolderForCustomisation.''.Config::inst()->get(self::class,'copy_css_to_folder'),
-                    $base.$themeFolderForCustomisation.''.Config::inst()->get(self::class,'copy_js_to_folder'),
-                    $base.'/'.THEMES_DIR . "/" . $theme.'_'.$distributionFolderExtension,
-                ];
-                foreach ($rawFolders as $folder) {
-                    Filesystem::makeFolder($folder);
-                }
-                $files = [
-                    $base.$themeFolderForCustomisation.'src/main.js',
-                ];
-                foreach ($files as $file) {
-                    if (!file_exists($file)) {
-                        @file_put_contents($file, '//add your customisations in this file');
-                    }
-                }
-
-                $varArray = [
-                    'themeName' => self::webpack_current_theme_as_set_in_db(),
-                    'devWebAddress' => isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : Director::protocolAndHost(),
-                    'distributionFolder' => self::webpack_current_theme_as_set_in_db().'_'.Config::inst()->get(WebpackPageControllerExtension::class, 'webpack_distribution_folder_extension'),
-                ];
-                $str = 'module.exports = '.json_encode($varArray).'';
-                @file_put_contents($base.'/'.Config::inst()->get(self::class,'webpack_variables_file_location'), $str);
-            }
-        }
-    }
-
-    public function deleteAllCombinedFiles()
-    {
-        $combinedFolder = $this->getCombinedFilesFolder();
-        if ($combinedFolder) {
-            if ($this->getAssetHandler()) {
-                $this->getAssetHandler()->removeContent($combinedFolder);
-            }
-        }
-    }
+    // public function deleteAllCombinedFiles()
+    // {
+    //     $combinedFolder = $this->getCombinedFilesFolder();
+    //     if ($combinedFolder) {
+    //         if ($this->getAssetHandler()) {
+    //             $this->getAssetHandler()->removeContent($combinedFolder);
+    //         }
+    //     }
+    // }
 }

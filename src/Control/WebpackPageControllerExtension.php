@@ -2,171 +2,52 @@
 
 namespace Sunnysideup\WebpackRequirementsBackend\Control;
 
-use SilverStripe\Control\Director;
-use SilverStripe\Core\Config\Config;
-use SilverStripe\View\SSViewer;
 use SilverStripe\Core\Extension;
-use SilverStripe\Core\Manifest\ModuleResourceLoader;
+use SilverStripe\Core\Injector\Injector;
+
+use Sunnysideup\WebpackRequirementsBackend\Api\Configuration;
 
 class WebpackPageControllerExtension extends Extension
 {
-
     /**
-     * you only need to set this if you have some themes that are enabled and some themes
-     * that do not run webpack
-     * @var {Array}
-     */
-    private static $webpack_enabled_themes = [];
-
-    /**
-     * override webpack server for custom set ups
-     * set to true to make this class believe you are always running
-     * the webpack server
-     * @see IsWebpackDevServer
-     * @var bool
-     */
-    private static $is_webpack_server = false;
-
-    /**
-     * override webpack server for custom set ups
-     * this is the server used for checking if the webpack server is running
-     * @see IsWebpackDevServer
-     * @var bool
-     */
-    private static $webpack_socket_server = 'localhost';
-
-    /**
-     * usually this is set to current domain
-     * only set if you need an alternative
-     * @see: WebpackBaseURL
+     * e.g. app
      * @var string
      */
-    private static $webpack_server = '';
+    private static $distilled_file_base_name = 'app';
+
+    public function AppCSSLocation(): string
+    {
+        return $this->getWebpackFile($this->Config()->get('distilled_file_base_name') . '.css');
+    }
+
+    public function AppVendorJSLocation(): string
+    {
+        return $this->getWebpackFile('vendors~' . $this->Config()->get('distilled_file_base_name') . '.js');
+    }
+
+    public function AppJSLocation(): string
+    {
+        return $this->getWebpackFile($this->Config()->get('distilled_file_base_name') . '.js');
+    }
 
     /**
-     *
-     * @var int
-     */
-    private static $webpack_port = 3000;
-
-    /**
-     * this is the folder where the distilled files are placed.
-     * If your theme is foo then you will find the distilled files in themes/foo_dist
-     * @var string
-     */
-    private static $webpack_distribution_folder_extension = 'dist';
-
-    /**
-     *
      * @return bool
      */
-    public function IsNotWebpackDevServer()
+    public function IsNotWebpackDevServer(): bool
     {
-        return $this->IsWebpackDevServer() ? false : true;
+        return Injector::inst()->get(Configuration::class)->IsNotWebpackDevServer();
     }
 
-
     /**
-     *
      * @return bool
      */
-    public function IsWebpackDevServer()
+    public function IsWebpackDevServer(): bool
     {
-        $override = $this->owner->Config()->get('is_webpack_server');
-        if ($override) {
-            return $override;
-        }
-        if (Director::isDev()) {
-            $socket = @fsockopen(
-                $this->owner->Config()->get('webpack_socket_server'),
-                $this->owner->Config()->get('webpack_port'),
-                $errno,
-                $errstr,
-                1
-            );
-            return ! $socket ? false : true;
-        }
+        return Injector::inst()->get(Configuration::class)->IsWebpackDevServer();
     }
 
-
-    /**
-     *
-     * @return string
-     */
-    public function WebpackBaseURL()
+    protected function getWebpackFile(string $file): string
     {
-        $webpackServer = $this->owner->Config()->get('webpack_server');
-        if (! $webpackServer) {
-            $webpackServer = Director::AbsoluteBaseURL('/');
-        }
-        if ($this->IsWebpackDevServer()) {
-            $webpackServer = rtrim($webpackServer, '/') .':'.$this->owner->Config()->get('webpack_port');
-        }
-
-        return $webpackServer;
-    }
-
-    public function AppCSSLocation() : string
-    {
-        return $this->getWebpackFile('app.css');
-    }
-
-    public function AppVendorJSLocation() : string
-    {
-        return $this->getWebpackFile('vendors~app.js');
-    }
-
-    public function AppJSLocation() : string
-    {
-        return $this->getWebpackFile('app.js');
-    }
-
-    protected function getWebpackFile(string $file) : string
-    {
-        foreach (['',  '.gz'] as $extension) {
-            $fileLocation = $this->WebpackFolderOnFileSystem(true) . '/' . $file . $extension;
-            if (file_exists($fileLocation)) {
-                $hash = filemtime($fileLocation);
-                $frontendFile = $this->WebpackFolderOnFrontEnd() . '/' . $file . '?x=' . $hash;
-
-                return $frontendFile;
-            }
-        }
-
-        return '';
-    }
-
-
-    /**
-     * @return string e.g. dist
-     */
-    public function WebpackDistributionFolderExtension(): string
-    {
-        return $this->owner->Config()->get('webpack_distribution_folder_extension');
-    }
-
-    /**
-     *
-     * @return string e.g. resources/themes/app_dist
-     */
-    public function WebpackFolderOnFrontEnd() : string
-    {
-        return ModuleResourceLoader::resourceURL($this->WebpackFolderOnFileSystem(false));
-    }
-
-    /**
-     *
-     * @param  boolean $withBase include baseFolder?
-     * @return string return /var/www/html/themes/app_dist
-     */
-    public function WebpackFolderOnFileSystem(?bool $withBase = true) : string
-    {
-        $location = '';
-        if ($withBase) {
-            $location .= Director::baseFolder() . '/';
-        }
-        $location .= THEMES_DIR . "/" . Config::inst()->get(SSViewer::class, 'theme').'_'.$this->WebpackDistributionFolderExtension();
-
-        return $location;
+        return Injector::inst()->get(Configuration::class)->getWebpackFile($file);
     }
 }
