@@ -46,7 +46,6 @@ class WebpackPageControllerExtension extends Extension
         return Injector::inst()->get(Configuration::class)->IsWebpackDevServer();
     }
 
-
     public function WebpackFolderOnFrontEnd(string $file): string
     {
         return Injector::inst()->get(Configuration::class)->WebpackFolderOnFrontEnd();
@@ -56,5 +55,4 @@ class WebpackPageControllerExtension extends Extension
     {
         return Injector::inst()->get(Configuration::class)->getWebpackFile($file);
     }
-
 }

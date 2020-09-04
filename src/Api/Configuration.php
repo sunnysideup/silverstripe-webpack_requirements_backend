@@ -91,10 +91,10 @@ class Configuration
                 $theme = (string) array_shift($array);
             }
         }
-        if(! $theme) {
+        if (! $theme) {
             $theme = (string) Config::inst()->get(SSViewer::class, 'theme');
         }
-        if(! $theme) {
+        if (! $theme) {
             $theme = 'please set theme ASAP';
         }
         return $theme;
@@ -147,6 +147,19 @@ class Configuration
         return ModuleResourceLoader::resourceURL($this->WebpackFolderOnFileSystem(false));
     }
 
+    public function getWebpackFile(string $file): string
+    {
+        foreach (['',  '.gz'] as $extension) {
+            $fileLocation = $this->WebpackFolderOnFileSystem(true) . '/' . $file . $extension;
+            if (file_exists($fileLocation)) {
+                $hash = filemtime($fileLocation);
+                return $this->WebpackFolderOnFrontEnd() . '/' . $file . '?x=' . $hash;
+            }
+        }
+
+        return '';
+    }
+
     /**
      * @param  boolean $withBase include baseFolder?
      * @return string return /var/www/html/themes/app_dist
@@ -160,20 +173,6 @@ class Configuration
         $location .= THEMES_DIR . '/' . self::get_theme_for_webpack() . '/' . $this->Config()->get('webpack_distribution_folder_extension');
 
         return $location;
-    }
-
-
-    public function getWebpackFile(string $file): string
-    {
-        foreach (['',  '.gz'] as $extension) {
-            $fileLocation = $this->WebpackFolderOnFileSystem(true) . '/' . $file . $extension;
-            if (file_exists($fileLocation)) {
-                $hash = filemtime($fileLocation);
-                return $this->WebpackFolderOnFrontEnd() . '/' . $file . '?x=' . $hash;
-            }
-        }
-
-        return '';
     }
 
     // /**

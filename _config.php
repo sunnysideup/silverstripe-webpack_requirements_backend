@@ -2,10 +2,8 @@
 use SilverStripe\Core\Config\Config;
 use SilverStripe\View\Requirements;
 
-use SilverStripe\View\SSViewer;
 
 use Sunnysideup\WebpackRequirementsBackend\Api\Configuration;
-use Sunnysideup\WebpackRequirementsBackend\Control\WebpackPageControllerExtension;
 use Sunnysideup\WebpackRequirementsBackend\View\RequirementsBackendForWebpack;
 
 if (defined('webpack_requirements_backend_off')) {

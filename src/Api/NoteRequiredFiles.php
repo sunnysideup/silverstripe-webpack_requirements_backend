@@ -11,7 +11,6 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Flushable;
-use SilverStripe\View\SSViewer;
 
 class NoteRequiredFiles implements Flushable
 {
@@ -91,7 +90,6 @@ class NoteRequiredFiles implements Flushable
 
         return false;
     }
-
 
     /**
      * @param  string $fileLocation
