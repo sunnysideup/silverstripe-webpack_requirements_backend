@@ -68,12 +68,11 @@ class RequirementsBackendForWebpack extends Requirements_Backend
     public function includeInHTML($content)
     {
         if (self::is_themed_request()) {
-
             //=====================================================================
             // start copy-ish from parent class
 
-            $hasHead = (strpos($content, '</head>') !== false || strpos($content, '</head ') !== false) ? true : false;
-            $hasRequirements = ($this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags) ? true : false;
+            $hasHead = strpos($content, '</head>') !== false || strpos($content, '</head ') !== false ? true : false;
+            $hasRequirements = $this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags ? true : false;
             if ($hasHead && $hasRequirements) {
                 $requirements = '';
                 $jsRequirements = '';
@@ -113,7 +112,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
                     if ($isDev || $ignore) {
                         $path = Convert::raw2xml($this->pathForFile($file));
                         if ($path) {
-                            $media = (isset($params['media']) && ! empty($params['media'])) ? $params['media'] : '';
+                            $media = isset($params['media']) && ! empty($params['media']) ? $params['media'] : '';
                             if ($isDev) {
                                 $requirementsCSSFiles[$path . '_' . $media] = $path;
                             }
@@ -187,15 +186,13 @@ class RequirementsBackendForWebpack extends Requirements_Backend
      */
     public static function is_themed_request(): bool
     {
-        if (
-            Config::inst()->get(SSViewer::class, 'theme_enabled')
+        if (Config::inst()->get(SSViewer::class, 'theme_enabled')
             &&
             Config::inst()->get(Configuration::class, 'enabled')
         ) {
             if (Controller::has_curr()) {
                 $controller = Controller::curr();
-                if (
-                    $controller instanceof LeftAndMain ||
+                if ($controller instanceof LeftAndMain ||
                     $controller instanceof TaskRunner
                 ) {
                     return false;
