@@ -89,7 +89,7 @@ class Configuration
             $array = SSViewer::get_themes();
             if (! empty($array)) {
                 $theme = '$error';
-                while($theme && strpos($theme, '$') !== false) {
+                while ($theme && strpos($theme, '$') !== false) {
                     $theme = (string) array_shift($array);
                 }
             }
@@ -157,8 +157,8 @@ class Configuration
             if (file_exists($fileLocation)) {
                 $hash = filemtime($fileLocation);
                 return $this->WebpackFolderOnFrontEnd() . '/' . $file . '?x=' . $hash;
-            } elseif(Director::isDev()) {
-                user_error('Could find: '.$fileLocation);
+            } elseif (Director::isDev()) {
+                user_error('Could find: ' . $fileLocation);
             }
         }
 
