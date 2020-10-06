@@ -11,18 +11,18 @@ The `customScripts` and `customCSS` calls work as normal. On the other hand, any
 
  Your html template should look something like this (note the **includes**)
  ```html
- <!doctype html>
- <html lang="en">
- <head>
-     <meta charset="utf-8">
-     <title>Webpack example</title>
-     <meta name="viewport" content="width=device-width, initial-scale=1">
-     <% include WebpackCSSLinks %>
- </head>
- <body>
-     <% include WebpackJSLinks %>
- </body>
- </html>
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Webpack example</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <% include WebpackCSSLinks %>
+    </head>
+    <body>
+        <% include WebpackJSLinks %>
+    </body>
+</html>
  ```
 
 All css/jss files required will be copied to a special requirements folder. You can go through this requirements folder and pick the CSS and JS you would like to include in your `webpack` using the standard webpack methodologies.
