@@ -152,7 +152,7 @@ class Configuration
 
     public function getWebpackFile(string $file): string
     {
-        foreach (['',  '.gz'] as $extension) {
+        foreach (['.gz',  ''] as $extension) {
             $fileLocation = $this->WebpackFolderOnFileSystem(true) . '/' . $file . $extension;
             if (file_exists($fileLocation)) {
                 $hash = filemtime($fileLocation);
