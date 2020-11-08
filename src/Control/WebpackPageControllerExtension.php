@@ -20,9 +20,12 @@ class WebpackPageControllerExtension extends Extension
         return $this->getWebpackFile($this->owner->Config()->get('distilled_file_base_name') . '.css');
     }
 
-    public function AppVendorJSLocation(): string
+    public function AppVendorJSLocation(): ?string
     {
-        return $this->getWebpackFile('vendors~' . $this->owner->Config()->get('distilled_file_base_name') . '.js');
+        if($this->IsWebpackDevServer()) {
+            return $this->getWebpackFile('vendors~' . $this->owner->Config()->get('distilled_file_base_name') . '.js');
+        }
+        return null;
     }
 
     public function AppJSLocation(): string

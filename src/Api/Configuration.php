@@ -157,11 +157,11 @@ class Configuration
             if (file_exists($fileLocation)) {
                 $hash = filemtime($fileLocation);
                 return $this->WebpackFolderOnFrontEnd() . '/' . $file . '?x=' . $hash;
-            } elseif (Director::isDev()) {
-                user_error('Could find: ' . $fileLocation);
             }
         }
-
+        if (Director::isDev()) {
+            user_error('Could find: ' . $fileLocation);
+        }
         return '';
     }
 
