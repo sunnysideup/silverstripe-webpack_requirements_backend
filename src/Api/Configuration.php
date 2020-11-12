@@ -80,7 +80,7 @@ class Configuration
     /**
      * @var int
      */
-    private static $webpack_port = 3000;
+    private static $webpack_port = 35729;
 
     public static function get_theme_for_webpack(): string
     {
@@ -150,7 +150,7 @@ class Configuration
         return ModuleResourceLoader::resourceURL($this->WebpackFolderOnFileSystem(false));
     }
 
-    public function getWebpackFile(string $file): string
+    public function getWebpackFile(string $file, ?bool $break = true): string
     {
         foreach (['.gz',  ''] as $extension) {
             $fileLocation = $this->WebpackFolderOnFileSystem(true) . '/' . $file . $extension;
@@ -159,7 +159,7 @@ class Configuration
                 return $this->WebpackFolderOnFrontEnd() . '/' . $file . '?x=' . $hash;
             }
         }
-        if (Director::isDev()) {
+        if ($break && Director::isDev()) {
             user_error('Could find: ' . $fileLocation);
         }
         return '';
@@ -169,7 +169,7 @@ class Configuration
      * @param  boolean $withBase include baseFolder?
      * @return string return /var/www/html/themes/app_dist
      */
-    protected function WebpackFolderOnFileSystem(?bool $withBase = true): string
+    public function WebpackFolderOnFileSystem(?bool $withBase = true): string
     {
         $location = '';
         if ($withBase) {
