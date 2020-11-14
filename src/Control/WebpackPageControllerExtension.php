@@ -21,7 +21,7 @@ class WebpackPageControllerExtension extends Extension
         return $this->getWebpackFile($this->owner->Config()->get('distilled_file_base_name') . '.css');
     }
 
-    public function AppVendorJSLocation(): ?string
+    public function AppVendorJSLocation(?bool $strict = false): ?string
     {
         $file = 'vendors~' . $this->owner->Config()->get('distilled_file_base_name') . '.js';
         if($this->IsWebpackDevServer()) {
@@ -29,7 +29,7 @@ class WebpackPageControllerExtension extends Extension
             return $file;
         } else {
             $file = Controller::join_links($this->WebpackFolderOnFileSystem() , $file);
-            if(file_exists($file) ) {
+            if(file_exists($file) && $strict) {
                 user_error(
                     'The following file should only exist if webpack is running (currently it seems it is not running but the file exists)
 
