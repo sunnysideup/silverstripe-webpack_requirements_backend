@@ -159,9 +159,9 @@ class Configuration
                 return $this->WebpackFolderOnFrontEnd() . '/' . $file . '?x=' . $hash;
             }
         }
-        if ($break && Director::isDev()) {
-            user_error('Could find: ' . $fileLocation);
-        }
+        // if ($break && Director::isDev()) {
+        //     user_error('Could find: ' . $fileLocation);
+        // }
         return '';
     }
 

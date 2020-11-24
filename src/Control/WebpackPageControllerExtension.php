@@ -4,7 +4,6 @@ namespace Sunnysideup\WebpackRequirementsBackend\Control;
 
 use SilverStripe\Core\Extension;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Control\Controller;
 
 use Sunnysideup\WebpackRequirementsBackend\Api\Configuration;
 
@@ -20,13 +19,13 @@ class WebpackPageControllerExtension extends Extension
     {
         return $this->getWebpackFile($this->owner->Config()->get('distilled_file_base_name') . '.css');
     }
-    
+
     public function AppVendorJSLocation(?bool $strict = false): string
     {
         $file = 'vendors~' . $this->owner->Config()->get('distilled_file_base_name') . '.js';
-        return $this->getWebpackFile($file);
-    } 
-
+        //vendor~app.js is not included if there is no vendor stuff to be included.
+        return $this->getWebpackFile($file, false);
+    }
 
     public function AppJSLocation(): string
     {
