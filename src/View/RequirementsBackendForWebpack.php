@@ -48,7 +48,10 @@ class RequirementsBackendForWebpack extends Requirements_Backend
      * e.g. /app/javascript/test.js
      * @var array
      */
-    private static $files_to_ignore = [];
+    private static $files_to_ignore = [
+        'vendor/silverstripe/admin/client/dist/styles/bundle.css',
+        'vendor/silverstripe/login-forms/client/dist/styles/bundle.css',
+    ];
 
     /**
      * @var array
