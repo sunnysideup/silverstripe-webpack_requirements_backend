@@ -51,6 +51,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
     private static $files_to_ignore = [
         'vendor/silverstripe/admin/client/dist/styles/bundle.css',
         'vendor/silverstripe/login-forms/client/dist/styles/bundle.css',
+        'vendor/undefinedoffset/silverstripe-nocaptcha/javascript/NocaptchaField.js',
     ];
 
     /**
