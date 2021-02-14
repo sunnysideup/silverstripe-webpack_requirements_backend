@@ -159,7 +159,7 @@ class Configuration
             }
         }
         if ($break && Director::isDev()) {
-            user_error('Could find: ' . $fileLocation .' based on '.$file. ',' . $this->WebpackFolderOnFileSystem(true));
+            user_error('Could find: ' . $fileLocation . ' based on ' . $file . ',' . $this->WebpackFolderOnFileSystem(true));
         }
         return '';
     }
