@@ -88,8 +88,7 @@ class Configuration
         if (! $theme) {
             $array = SSViewer::get_themes();
             if (! empty($array)) {
-                $theme = '$error';
-                while ($theme && strpos($theme, '$') !== false) {
+                while ($theme && strpos($theme, '$') !== false && strpos($theme, 'silverstripe/admin') !== false) {
                     $theme = (string) array_shift($array);
                 }
             }
@@ -98,7 +97,7 @@ class Configuration
             $theme = (string) Config::inst()->get(SSViewer::class, 'theme');
         }
         if (! $theme) {
-            $theme = 'please set theme ASAP';
+            $theme = 'please set webpack_theme ASAP';
         }
         return $theme;
     }
@@ -160,7 +159,7 @@ class Configuration
             }
         }
         if ($break && Director::isDev()) {
-            user_error('Could find: ' . $fileLocation);
+            user_error('Could find: ' . $fileLocation .' based on '.$file. ',' . $this->WebpackFolderOnFileSystem(true));
         }
         return '';
     }
