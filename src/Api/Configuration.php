@@ -97,7 +97,7 @@ class Configuration
             $theme = (string) Config::inst()->get(SSViewer::class, 'theme');
         }
         if (! $theme) {
-            $theme = 'please set webpack_theme ASAP';
+            user_error('please set webpack_theme ASAP');
         }
         return $theme;
     }
