@@ -102,25 +102,19 @@ class Configuration
         return $theme;
     }
 
-    /**
-     * @return string
-     */
+
     public static function webpack_theme_folder(): string
     {
         return THEMES_DIR . '/' . self::get_theme_for_webpack();
     }
 
-    /**
-     * @return bool
-     */
+
     public function IsNotWebpackDevServer(): bool
     {
         return $this->IsWebpackDevServer() ? false : true;
     }
 
-    /**
-     * @return bool
-     */
+
     public function IsWebpackDevServer(): bool
     {
         $override = $this->Config()->get('is_webpack_server_override');

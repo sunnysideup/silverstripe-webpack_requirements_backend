@@ -171,8 +171,6 @@ class RequirementsBackendForWebpack extends Requirements_Backend
     /**
      * Attach requirements inclusion to X-Include-JS and X-Include-CSS headers on the given
      * HTTP Response
-     *
-     * @param HTTPResponse $response
      */
     public function includeInResponse(HTTPResponse $response)
     {
@@ -185,9 +183,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
         //do nothing ...
     }
 
-    /**
-     * @return bool
-     */
+
     public static function is_themed_request(): bool
     {
         if (Config::inst()->get(SSViewer::class, 'theme_enabled')

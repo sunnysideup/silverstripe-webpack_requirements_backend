@@ -73,9 +73,7 @@ class NoteRequiredFiles implements Flushable
         }
     }
 
-    /**
-     * @return bool
-     */
+
     public static function can_save_requirements(): bool
     {
         if (Director::isDev()) {
@@ -91,10 +89,7 @@ class NoteRequiredFiles implements Flushable
         return false;
     }
 
-    /**
-     * @param  string $fileLocation
-     * @param  string $type
-     */
+
     public function noteFileRequired(string $fileLocation, string $type = '')
     {
         if (! $type) {

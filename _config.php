@@ -1,4 +1,5 @@
 <?php
+
 use SilverStripe\Core\Config\Config;
 use SilverStripe\View\Requirements;
 

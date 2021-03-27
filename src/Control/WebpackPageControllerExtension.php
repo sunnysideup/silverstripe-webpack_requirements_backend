@@ -32,17 +32,13 @@ class WebpackPageControllerExtension extends Extension
         return $this->getWebpackFile($this->owner->Config()->get('distilled_file_base_name') . '.js');
     }
 
-    /**
-     * @return bool
-     */
+
     public function IsNotWebpackDevServer(): bool
     {
         return Injector::inst()->get(Configuration::class)->IsNotWebpackDevServer();
     }
 
-    /**
-     * @return bool
-     */
+
     public function IsWebpackDevServer(): bool
     {
         return Injector::inst()->get(Configuration::class)->IsWebpackDevServer();
