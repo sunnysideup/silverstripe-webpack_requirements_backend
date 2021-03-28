@@ -75,8 +75,8 @@ class RequirementsBackendForWebpack extends Requirements_Backend
             //=====================================================================
             // start copy-ish from parent class
 
-            $hasHead = strpos($content, '</head>') !== false || strpos($content, '</head ') !== false ? true : false;
-            $hasRequirements = $this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags ? true : false;
+            $hasHead = strpos($content, '</head>') !== false || strpos($content, '</head ') !== false;
+            $hasRequirements = $this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags;
             if ($hasHead && $hasRequirements) {
                 $requirements = '';
                 $jsRequirements = '';
@@ -96,7 +96,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
                                 $requirementsJSFiles[$path] = $path;
                             }
                             if ($ignore) {
-                                $jsRequirements .= "<script type=\"text/javascript\" src=\"${path}\"></script>\n";
+                                $jsRequirements .= "<script type=\"text/javascript\" src=\"{$path}\"></script>\n";
                             }
                         }
                     }
@@ -106,7 +106,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
                 if ($this->customScript) {
                     foreach (array_diff_key($this->customScript, $this->blocked) as $script) {
                         $jsRequirements .= "<script type=\"text/javascript\">\n//<![CDATA[\n";
-                        $jsRequirements .= "${script}\n";
+                        $jsRequirements .= "{$script}\n";
                         $jsRequirements .= "\n//]]>\n</script>\n";
                     }
                 }
@@ -124,29 +124,29 @@ class RequirementsBackendForWebpack extends Requirements_Backend
                                 if ($media !== '') {
                                     $media = " media=\"{$media}\"";
                                 }
-                                $requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"${path}\" />\n";
+                                $requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"{$path}\" />\n";
                             }
                         }
                     }
                 }
 
                 foreach (array_diff_key($this->customCSS, $this->blocked) as $css) {
-                    $requirements .= "<style type=\"text/css\">\n${css}\n</style>\n";
+                    $requirements .= "<style type=\"text/css\">\n{$css}\n</style>\n";
                 }
 
                 foreach (array_diff_key($this->customHeadTags, $this->blocked) as $customHeadTag) {
-                    $requirements .= "${customHeadTag}\n";
+                    $requirements .= "{$customHeadTag}\n";
                 }
 
                 // Remove all newlines from code to preserve layout
-                $jsRequirements = preg_replace('/>\n*/', '>', $jsRequirements);
+                $jsRequirements = preg_replace('#>\n*#', '>', $jsRequirements);
 
                 // Forcefully put the scripts at the bottom of the body instead of before the first
                 // script tag.
-                $content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . '\\1', $content);
+                $content = preg_replace("#(<\\/body[^>]*>)#i", $jsRequirements . '\\1', $content);
 
                 // Put CSS at the bottom of the head
-                $content = preg_replace("/(<\/head>)/i", $requirements . '\\1', $content);
+                $content = preg_replace("#(<\\/head>)#i", $requirements . '\\1', $content);
 
                 //end copy-ish from parent class
                 //=====================================================================
@@ -192,13 +192,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
         ) {
             if (Controller::has_curr()) {
                 $controller = Controller::curr();
-                if ($controller instanceof LeftAndMain ||
-                    $controller instanceof TaskRunner
-                ) {
-                    return false;
-                }
-
-                return true;
+                return !$controller instanceof LeftAndMain && !$controller instanceof TaskRunner;
             }
         }
 
@@ -211,7 +205,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
     public function deleteAllCombinedFiles()
     {
         $combinedFolder = $this->getCombinedFilesFolder();
-        if ($combinedFolder) {
+        if ($combinedFolder !== '') {
             if ($this->getAssetHandler()) {
                 $this->getAssetHandler()->removeContent($combinedFolder);
             }

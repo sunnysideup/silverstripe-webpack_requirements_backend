@@ -85,7 +85,7 @@ class Configuration
     public static function get_theme_for_webpack(): string
     {
         $theme = (string) Config::inst()->get(self::class, 'webpack_theme');
-        if (! $theme) {
+        if ($theme === '') {
             $array = SSViewer::get_themes();
             if (! empty($array)) {
                 while ($theme && strpos($theme, '$') !== false && strpos($theme, 'silverstripe/admin') !== false) {
@@ -93,10 +93,10 @@ class Configuration
                 }
             }
         }
-        if (! $theme) {
+        if ($theme === '') {
             $theme = (string) Config::inst()->get(SSViewer::class, 'theme');
         }
-        if (! $theme) {
+        if ($theme === '') {
             user_error('<pre>please set webpack theme: ' . self::class . '::webpack_theme: [your theme here] (add to yml file).');
         }
         return $theme;
@@ -111,7 +111,7 @@ class Configuration
 
     public function IsNotWebpackDevServer(): bool
     {
-        return $this->IsWebpackDevServer() ? false : true;
+        return !$this->IsWebpackDevServer();
     }
 
 
@@ -129,7 +129,7 @@ class Configuration
                 $errstr,
                 1
             );
-            return ! $socket ? false : true;
+            return !! $socket;
         }
 
         return false;
@@ -146,14 +146,14 @@ class Configuration
     public function getWebpackFile(string $file, ?bool $break = true): string
     {
         foreach (['.gz',  ''] as $extension) {
-            $fileLocation = $this->WebpackFolderOnFileSystem(true) . '/' . $file . $extension;
+            $fileLocation = $this->WebpackFolderOnFileSystem() . '/' . $file . $extension;
             if (file_exists($fileLocation)) {
                 $hash = filemtime($fileLocation);
                 return $this->WebpackFolderOnFrontEnd() . '/' . $file . '?x=' . $hash;
             }
         }
         if ($break && Director::isDev()) {
-            user_error('Could find: ' . $fileLocation . ' based on ' . $file . ',' . $this->WebpackFolderOnFileSystem(true));
+            user_error('Could find: ' . $fileLocation . ' based on ' . $file . ',' . $this->WebpackFolderOnFileSystem());
         }
         return '';
     }

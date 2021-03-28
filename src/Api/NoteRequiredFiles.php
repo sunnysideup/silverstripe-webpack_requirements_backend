@@ -79,7 +79,7 @@ class NoteRequiredFiles implements Flushable
         if (Director::isDev()) {
             if (Config::inst()->get(self::class, 'save_requirements_in_folder')) {
                 if (RequirementsBackendForWebpack::is_themed_request()) {
-                    if (Configuration::get_theme_for_webpack()) {
+                    if (Configuration::get_theme_for_webpack() !== '') {
                         return true;
                     }
                 }
@@ -92,7 +92,7 @@ class NoteRequiredFiles implements Flushable
 
     public function noteFileRequired(string $fileLocation, string $type = '')
     {
-        if (! $type) {
+        if ($type === '') {
             $type = pathinfo($fileLocation, PATHINFO_EXTENSION);
         }
         $folderLocation = '';
@@ -122,7 +122,7 @@ class NoteRequiredFiles implements Flushable
             $this->addLinesToFile($logFile, $fileLocation);
         } else {
             $from = $fileLocation;
-            $line = '@import \'PROJECT_ROOT' . $from . '\'';
+            $line = "@import 'PROJECT_ROOT" . $from . "'";
             $logFile = $folderLocationWithBase . '/TO.INCLUDE.USING.WEBPACK.METHODS.log';
             $this->addLinesToFile($logFile, $line);
         }
@@ -152,9 +152,9 @@ class NoteRequiredFiles implements Flushable
                         ');
                 }
             }
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             $this->makeFolderWritable($fileLocation);
-            $count++;
+            ++$count;
             if ($count < 3) {
                 $this->addLinesToFile($fileLocation, $lines, $count);
             }
