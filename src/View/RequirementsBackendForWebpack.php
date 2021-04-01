@@ -143,10 +143,10 @@ class RequirementsBackendForWebpack extends Requirements_Backend
 
                 // Forcefully put the scripts at the bottom of the body instead of before the first
                 // script tag.
-                $content = preg_replace("#(<\\/body[^>]*>)#i", $jsRequirements . '\\1', $content);
+                $content = preg_replace('#(<\\/body[^>]*>)#i', $jsRequirements . '\\1', $content);
 
                 // Put CSS at the bottom of the head
-                $content = preg_replace("#(<\\/head>)#i", $requirements . '\\1', $content);
+                $content = preg_replace('#(<\\/head>)#i', $requirements . '\\1', $content);
 
                 //end copy-ish from parent class
                 //=====================================================================
@@ -183,7 +183,6 @@ class RequirementsBackendForWebpack extends Requirements_Backend
         //do nothing ...
     }
 
-
     public static function is_themed_request(): bool
     {
         if (Config::inst()->get(SSViewer::class, 'theme_enabled')
@@ -192,7 +191,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
         ) {
             if (Controller::has_curr()) {
                 $controller = Controller::curr();
-                return !$controller instanceof LeftAndMain && !$controller instanceof TaskRunner;
+                return ! $controller instanceof LeftAndMain && ! $controller instanceof TaskRunner;
             }
         }
 

@@ -102,18 +102,15 @@ class Configuration
         return $theme;
     }
 
-
     public static function webpack_theme_folder(): string
     {
         return THEMES_DIR . '/' . self::get_theme_for_webpack();
     }
 
-
     public function IsNotWebpackDevServer(): bool
     {
-        return !$this->IsWebpackDevServer();
+        return ! $this->IsWebpackDevServer();
     }
-
 
     public function IsWebpackDevServer(): bool
     {
@@ -129,7 +126,7 @@ class Configuration
                 $errstr,
                 1
             );
-            return !! $socket;
+            return ! ! $socket;
         }
 
         return false;
