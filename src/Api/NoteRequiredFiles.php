@@ -3,7 +3,6 @@
 namespace Sunnysideup\WebpackRequirementsBackend\Api;
 
 use Exception;
-
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SilverStripe\Assets\Filesystem;
@@ -78,7 +77,7 @@ class NoteRequiredFiles implements Flushable
         if (Director::isDev()) {
             if (Config::inst()->get(self::class, 'save_requirements_in_folder')) {
                 if (RequirementsBackendForWebpack::is_themed_request()) {
-                    if (Configuration::get_theme_for_webpack() !== '') {
+                    if ('' !== Configuration::get_theme_for_webpack()) {
                         return true;
                     }
                 }
@@ -90,19 +89,22 @@ class NoteRequiredFiles implements Flushable
 
     public function noteFileRequired(string $fileLocation, string $type = '')
     {
-        if ($type === '') {
+        if ('' === $type) {
             $type = pathinfo($fileLocation, PATHINFO_EXTENSION);
         }
         $folderLocation = '';
         switch ($type) {
             case 'js':
                 $folderLocation = $this->Config()->get('copy_js_to_folder');
+
                 break;
             case 'css':
                 $folderLocation = $this->Config()->get('copy_css_to_folder');
+
                 break;
             default:
                 user_error('Please make sure to set type to js or css');
+
                 return;
         }
         $fileLocationArray = explode('?', $fileLocation);
@@ -114,7 +116,7 @@ class NoteRequiredFiles implements Flushable
         if (! file_exists($folderLocationWithBase)) {
             user_error('Please update RequirementsBackendForWebpack for the right folder or create ' . $folderLocationWithBase);
         }
-        if (strpos($fileLocation, '//') !== false) {
+        if (false !== strpos($fileLocation, '//')) {
             $logFile = $folderLocationWithBase . '/TO.INCLUDE.FROM.PAGE.SS.FILE.log';
             $line = $_SERVER['REQUEST_URI'] . ' | ' . $fileLocation;
             $this->addLinesToFile($logFile, $fileLocation);
@@ -130,6 +132,7 @@ class NoteRequiredFiles implements Flushable
     {
         $line .= "\n";
         $lines = '';
+
         try {
             $lines = [];
             if (file_exists($fileLocation)) {

@@ -31,21 +31,22 @@ class RequirementsBackendForWebpack extends Requirements_Backend
     protected $suffix_requirements = false;
 
     /**
-     * Whether to combine CSS and JavaScript files
+     * Whether to combine CSS and JavaScript files.
      *
      * @var bool
      */
     protected $combined_files_enabled = false;
 
     /**
-     * Force the JavaScript to the bottom of the page, even if there's a script tag in the body already
+     * Force the JavaScript to the bottom of the page, even if there's a script tag in the body already.
      *
-     * @var boolean
+     * @var bool
      */
     protected $force_js_to_bottom = true;
 
     /**
-     * e.g. /app/javascript/test.js
+     * e.g. /app/javascript/test.js.
+     *
      * @var array
      */
     private static $files_to_ignore = [
@@ -75,7 +76,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
             //=====================================================================
             // start copy-ish from parent class
 
-            $hasHead = strpos($content, '</head>') !== false || strpos($content, '</head ') !== false;
+            $hasHead = false !== strpos($content, '</head>') || false !== strpos($content, '</head ');
             $hasRequirements = $this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags;
             if ($hasHead && $hasRequirements) {
                 $requirements = '';
@@ -121,7 +122,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
                                 $requirementsCSSFiles[$path . '_' . $media] = $path;
                             }
                             if ($ignore) {
-                                if ($media !== '') {
+                                if ('' !== $media) {
                                     $media = " media=\"{$media}\"";
                                 }
                                 $requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"{$path}\" />\n";
@@ -163,14 +164,16 @@ class RequirementsBackendForWebpack extends Requirements_Backend
                     }
                 }
             }
+
             return $content;
         }
+
         return parent::includeInHTML($content);
     }
 
     /**
      * Attach requirements inclusion to X-Include-JS and X-Include-CSS headers on the given
-     * HTTP Response
+     * HTTP Response.
      */
     public function includeInResponse(HTTPResponse $response)
     {
@@ -191,6 +194,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
         ) {
             if (Controller::has_curr()) {
                 $controller = Controller::curr();
+
                 return ! $controller instanceof LeftAndMain && ! $controller instanceof TaskRunner;
             }
         }
@@ -204,7 +208,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
     public function deleteAllCombinedFiles()
     {
         $combinedFolder = $this->getCombinedFilesFolder();
-        if ($combinedFolder !== '') {
+        if ('' !== $combinedFolder) {
             if ($this->getAssetHandler()) {
                 $this->getAssetHandler()->removeContent($combinedFolder);
             }

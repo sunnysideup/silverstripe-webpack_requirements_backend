@@ -4,6 +4,10 @@ namespace Sunnysideup\WebpackRequirementsBackend\Test;
 
 use SilverStripe\Dev\SapphireTest;
 
+/**
+ * @internal
+ * @coversNothing
+ */
 class WebpackRequirementsBackendTest extends SapphireTest
 {
     protected $usesDatabase = false;

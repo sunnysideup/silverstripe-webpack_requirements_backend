@@ -4,13 +4,13 @@ namespace Sunnysideup\WebpackRequirementsBackend\Control;
 
 use SilverStripe\Core\Extension;
 use SilverStripe\Core\Injector\Injector;
-
 use Sunnysideup\WebpackRequirementsBackend\Api\Configuration;
 
 class WebpackPageControllerExtension extends Extension
 {
     /**
-     * e.g. app
+     * e.g. app.
+     *
      * @var string
      */
     private static $distilled_file_base_name = 'app';
