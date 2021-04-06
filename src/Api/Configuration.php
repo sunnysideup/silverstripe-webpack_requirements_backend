@@ -19,8 +19,10 @@ class Configuration
 
     /**
      * you only need to set this if you have some themes that are enabled and some themes
-     * that do not run webpack
+     * that do not run webpack.
+     *
      * @todo: implement
+     *
      * @var array
      */
     private static $webpack_enabled_themes = [];
@@ -32,7 +34,8 @@ class Configuration
 
     /**
      * this is the folder where the distilled files are placed.
-     * If your theme is foo then you will find the distilled files in themes/foo_dist
+     * If your theme is foo then you will find the distilled files in themes/foo_dist.
+     *
      * @var string
      */
     private static $webpack_distribution_folder_extension = 'dist';
@@ -55,24 +58,30 @@ class Configuration
     /**
      * override webpack server for custom set ups
      * set to true to make this class believe you are always running
-     * the webpack server
+     * the webpack server.
+     *
      * @see IsWebpackDevServer
+     *
      * @var bool
      */
     private static $is_webpack_server_override = false;
 
     /**
      * override webpack server for custom set ups
-     * this is the server used for checking if the webpack server is running
+     * this is the server used for checking if the webpack server is running.
+     *
      * @see IsWebpackDevServer
+     *
      * @var string
      */
     private static $webpack_socket_server = 'localhost';
 
     /**
      * usually this is set to current domain
-     * only set if you need an alternative
+     * only set if you need an alternative.
+     *
      * @see: WebpackBaseURL
+     *
      * @var string
      */
     private static $webpack_server = '';
@@ -85,35 +94,33 @@ class Configuration
     public static function get_theme_for_webpack(): string
     {
         $theme = (string) Config::inst()->get(self::class, 'webpack_theme');
-        if ($theme === '') {
+        if ('' === $theme) {
             $array = SSViewer::get_themes();
             if (! empty($array)) {
-                while ($theme && strpos($theme, '$') !== false && strpos($theme, 'silverstripe/admin') !== false) {
+                while ($theme && false !== strpos($theme, '$') && false !== strpos($theme, 'silverstripe/admin')) {
                     $theme = (string) array_shift($array);
                 }
             }
         }
-        if ($theme === '') {
+        if ('' === $theme) {
             $theme = (string) Config::inst()->get(SSViewer::class, 'theme');
         }
-        if ($theme === '') {
+        if ('' === $theme) {
             user_error('<pre>please set webpack theme: ' . self::class . '::webpack_theme: [your theme here] (add to yml file).');
         }
+
         return $theme;
     }
-
 
     public static function webpack_theme_folder(): string
     {
         return THEMES_DIR . '/' . self::get_theme_for_webpack();
     }
 
-
     public function IsNotWebpackDevServer(): bool
     {
-        return !$this->IsWebpackDevServer();
+        return ! $this->IsWebpackDevServer();
     }
-
 
     public function IsWebpackDevServer(): bool
     {
@@ -129,7 +136,8 @@ class Configuration
                 $errstr,
                 1
             );
-            return !! $socket;
+
+            return (bool) $socket;
         }
 
         return false;
@@ -149,17 +157,20 @@ class Configuration
             $fileLocation = $this->WebpackFolderOnFileSystem() . '/' . $file . $extension;
             if (file_exists($fileLocation)) {
                 $hash = filemtime($fileLocation);
+
                 return $this->WebpackFolderOnFrontEnd() . '/' . $file . '?x=' . $hash;
             }
         }
         if ($break && Director::isDev()) {
             user_error('Could find: ' . $fileLocation . ' based on ' . $file . ',' . $this->WebpackFolderOnFileSystem());
         }
+
         return '';
     }
 
     /**
-     * @param  boolean $withBase include baseFolder?
+     * @param bool $withBase include baseFolder?
+     *
      * @return string return /var/www/html/themes/app_dist
      */
     public function WebpackFolderOnFileSystem(?bool $withBase = true): string
