@@ -4,13 +4,13 @@ namespace Sunnysideup\WebpackRequirementsBackend\Control;
 
 use SilverStripe\Core\Extension;
 use SilverStripe\Core\Injector\Injector;
-
 use Sunnysideup\WebpackRequirementsBackend\Api\Configuration;
 
 class WebpackPageControllerExtension extends Extension
 {
     /**
-     * e.g. app
+     * e.g. app.
+     *
      * @var string
      */
     private static $distilled_file_base_name = 'app';
@@ -32,12 +32,10 @@ class WebpackPageControllerExtension extends Extension
         return $this->getWebpackFile($this->owner->Config()->get('distilled_file_base_name') . '.js');
     }
 
-
     public function IsNotWebpackDevServer(): bool
     {
         return Injector::inst()->get(Configuration::class)->IsNotWebpackDevServer();
     }
-
 
     public function IsWebpackDevServer(): bool
     {
