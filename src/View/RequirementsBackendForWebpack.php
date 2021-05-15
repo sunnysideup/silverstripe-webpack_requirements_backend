@@ -13,6 +13,10 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\TaskRunner;
 use SilverStripe\View\Requirements_Backend;
 use SilverStripe\View\SSViewer;
+
+use SilverStripe\UserForms\Model\UserDefinedForm;
+
+use SilverStripe\UserForms\Control\UserDefinedFormController;
 use Sunnysideup\WebpackRequirementsBackend\Api\Configuration;
 use Sunnysideup\WebpackRequirementsBackend\Api\NoteRequiredFiles;
 
@@ -59,6 +63,13 @@ class RequirementsBackendForWebpack extends Requirements_Backend
      * @var array
      */
     private static $urls_to_exclude = [];
+
+    /**
+     * @var array
+     */
+    private static $classes_to_exclude = [
+        UserDefinedFormController::class,
+    ];
 
     /**
      * @var bool
@@ -194,7 +205,11 @@ class RequirementsBackendForWebpack extends Requirements_Backend
         ) {
             if (Controller::has_curr()) {
                 $controller = Controller::curr();
-
+                foreach(Config::inst()->get(static::class, 'classes_to_exclude') as $class) {
+                    if ($controller instanceof $class) {
+                        return false;
+                    }
+                }
                 return ! $controller instanceof LeftAndMain && ! $controller instanceof TaskRunner;
             }
         }
