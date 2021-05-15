@@ -14,8 +14,6 @@ use SilverStripe\Dev\TaskRunner;
 use SilverStripe\View\Requirements_Backend;
 use SilverStripe\View\SSViewer;
 
-use SilverStripe\UserForms\Model\UserDefinedForm;
-
 use SilverStripe\UserForms\Control\UserDefinedFormController;
 use Sunnysideup\WebpackRequirementsBackend\Api\Configuration;
 use Sunnysideup\WebpackRequirementsBackend\Api\NoteRequiredFiles;
