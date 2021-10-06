@@ -221,10 +221,10 @@ class RequirementsBackendForWebpack extends Requirements_Backend
     public function deleteAllCombinedFiles()
     {
         $combinedFolder = $this->getCombinedFilesFolder();
-        if ('' !== $combinedFolder) {
-            if ($this->getAssetHandler()) {
+        if ($combinedFolder) {
+            // if ($this->getAssetHandler()) {
                 $this->getAssetHandler()->removeContent($combinedFolder);
-            }
+            // }
         }
     }
 }
