@@ -17,19 +17,19 @@ class WebpackPageControllerExtension extends Extension
 
     public function AppCSSLocation(): string
     {
-        return $this->getWebpackFile($this->owner->Config()->get('distilled_file_base_name') . '.css');
+        return $this->getWebpackFile($this->getOwner()->Config()->get('distilled_file_base_name') . '.css');
     }
 
     public function AppVendorJSLocation(?bool $strict = false): string
     {
-        $file = 'vendors~' . $this->owner->Config()->get('distilled_file_base_name') . '.js';
+        $file = 'vendors~' . $this->getOwner()->Config()->get('distilled_file_base_name') . '.js';
         //vendor~app.js is not included if there is no vendor stuff to be included.
         return $this->getWebpackFile($file, false);
     }
 
     public function AppJSLocation(): string
     {
-        return $this->getWebpackFile($this->owner->Config()->get('distilled_file_base_name') . '.js');
+        return $this->getWebpackFile($this->getOwner()->Config()->get('distilled_file_base_name') . '.js');
     }
 
     public function IsNotWebpackDevServer(): bool
