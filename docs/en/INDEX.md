@@ -34,3 +34,14 @@ If you would like to change any CSS / JS then please change the original files o
 External requirements (e.g. https://www.google.com/better.css) are written to a `requirements file` called `requirements` in the same folder to give you greater flexibility on how to manage these.
 
 You can also exclude files from being blocked so that they can be included as per usual (see configs).
+
+## include anyway ...
+
+
+add this to your yml:
+```
+Sunnysideup\WebpackRequirementsBackend\View\RequirementsBackendForWebpack:
+  files_to_ignore:
+    - vendor/team/package/dir/file1.js
+    - vendor/team/package/dir/file2.js
+```
