@@ -12,5 +12,6 @@ if (defined('webpack_requirements_backend_off')) {
     if (0 === count($options) || in_array(Configuration::get_theme_for_webpack(), $options, true)) {
         Requirements::set_backend(new RequirementsBackendForWebpack());
     }
+
     unset($options);
 }

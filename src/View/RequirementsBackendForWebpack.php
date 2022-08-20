@@ -104,6 +104,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
                             if ($isDev) {
                                 $requirementsJSFiles[$path] = $path;
                             }
+
                             if ($ignore) {
                                 $jsRequirements .= "<script type=\"text/javascript\" src=\"{$path}\"></script>\n";
                             }
@@ -129,10 +130,12 @@ class RequirementsBackendForWebpack extends Requirements_Backend
                             if ($isDev) {
                                 $requirementsCSSFiles[$path . '_' . $media] = $path;
                             }
+
                             if ($ignore) {
                                 if ('' !== $media) {
                                     $media = " media=\"{$media}\"";
                                 }
+
                                 $requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"{$path}\" />\n";
                             }
                         }
@@ -166,6 +169,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
                     foreach ($requirementsCSSFiles as $cssFile) {
                         Injector::inst()->get(NoteRequiredFiles::class)->noteFileRequired($cssFile, 'css');
                     }
+
                     //js
                     foreach ($requirementsJSFiles as $jsFile) {
                         Injector::inst()->get(NoteRequiredFiles::class)->noteFileRequired($jsFile, 'js');
@@ -190,6 +194,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
         } else {
             return parent::includeInResponse($response);
         }
+
         //$this->process_combined_files();
         //do nothing ...
     }

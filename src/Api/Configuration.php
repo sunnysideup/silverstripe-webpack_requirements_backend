@@ -102,9 +102,11 @@ class Configuration
                 }
             }
         }
+
         if ('' === $theme) {
             $theme = (string) Config::inst()->get(SSViewer::class, 'theme');
         }
+
         if ('' === $theme) {
             user_error('<pre>please set webpack theme: ' . self::class . '::webpack_theme: [your theme here] (add to yml file).');
         }
@@ -128,6 +130,7 @@ class Configuration
         if ($override) {
             return $override;
         }
+
         if (Director::isDev()) {
             $socket = @fsockopen(
                 $this->Config()->get('webpack_socket_server'),
@@ -161,6 +164,7 @@ class Configuration
                 return $this->WebpackFolderOnFrontEnd() . '/' . $file . '?x=' . $hash;
             }
         }
+
         if ($break && Director::isDev()) {
             user_error('Could find: ' . $fileLocation . ' based on ' . $file . ',' . $this->WebpackFolderOnFileSystem());
         }
@@ -179,9 +183,8 @@ class Configuration
         if ($withBase) {
             $location .= Director::baseFolder() . '/';
         }
-        $location .= THEMES_DIR . '/' . self::get_theme_for_webpack() . '/' . $this->Config()->get('webpack_distribution_folder_extension');
 
-        return $location;
+        return $location . (THEMES_DIR . '/' . self::get_theme_for_webpack() . '/' . $this->Config()->get('webpack_distribution_folder_extension'));
     }
 
     // /**

@@ -5,6 +5,8 @@ namespace Sunnysideup\WebpackRequirementsBackend\Api;
 use Exception;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+
+use Sunnysideup\WebpackRequirementsBackend\View\RequirementsBackendForWebpack;
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
@@ -51,6 +53,7 @@ class NoteRequiredFiles implements Flushable
                 foreach ($rawFolders as $folder) {
                     Filesystem::makeFolder($folder);
                 }
+
                 $files = [
                     $srcFolder . '/main.js',
                     $srcFolder . '/style.scss',
@@ -92,6 +95,7 @@ class NoteRequiredFiles implements Flushable
         if ('' === $type) {
             $type = pathinfo($fileLocation, PATHINFO_EXTENSION);
         }
+
         $folderLocation = '';
         switch ($type) {
             case 'js':
@@ -107,6 +111,7 @@ class NoteRequiredFiles implements Flushable
 
                 return;
         }
+
         $fileLocationArray = explode('?', $fileLocation);
         $fileLocation = array_shift($fileLocationArray);
         $base = Director::baseFolder();
@@ -116,6 +121,7 @@ class NoteRequiredFiles implements Flushable
         if (! file_exists($folderLocationWithBase)) {
             user_error('Please update RequirementsBackendForWebpack for the right folder or create ' . $folderLocationWithBase);
         }
+
         if (false !== strpos($fileLocation, '//')) {
             $logFile = $folderLocationWithBase . '/TO.INCLUDE.FROM.PAGE.SS.FILE.log';
             $line = $_SERVER['REQUEST_URI'] . ' | ' . $fileLocation;
@@ -138,6 +144,7 @@ class NoteRequiredFiles implements Flushable
             if (file_exists($fileLocation)) {
                 $lines = file($fileLocation);
             }
+
             if (! in_array($line, $lines, true)) {
                 //last catch!
                 if (is_writable($fileLocation)) {
