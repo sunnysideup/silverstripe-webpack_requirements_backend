@@ -5,13 +5,12 @@ namespace Sunnysideup\WebpackRequirementsBackend\Api;
 use Exception;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-
-use Sunnysideup\WebpackRequirementsBackend\View\RequirementsBackendForWebpack;
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Flushable;
+use Sunnysideup\WebpackRequirementsBackend\View\RequirementsBackendForWebpack;
 
 class NoteRequiredFiles implements Flushable
 {
