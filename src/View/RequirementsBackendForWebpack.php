@@ -226,8 +226,11 @@ class RequirementsBackendForWebpack extends Requirements_Backend
     {
         $combinedFolder = $this->getCombinedFilesFolder();
         if ($combinedFolder) {
+            // @var GeneratedAssetHandler|null $assetHandler
             $assetHandler = $this->getAssetHandler();
-            $assetHandler->removeContent($combinedFolder);
+            if($assetHandler) {
+                $assetHandler->removeContent($combinedFolder);
+            }
         }
     }
 }
