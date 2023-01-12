@@ -11,7 +11,6 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\TaskRunner;
-use SilverStripe\UserForms\Control\UserDefinedFormController;
 use SilverStripe\View\Requirements_Backend;
 use SilverStripe\View\SSViewer;
 use Sunnysideup\WebpackRequirementsBackend\Api\Configuration;
