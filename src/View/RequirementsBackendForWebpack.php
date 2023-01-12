@@ -65,7 +65,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
      * @var array
      */
     private static $classes_to_exclude = [
-        UserDefinedFormController::class,
+        'SilverStripe\\UserForms\\Control\\UserDefinedFormController',
     ];
 
     /**
