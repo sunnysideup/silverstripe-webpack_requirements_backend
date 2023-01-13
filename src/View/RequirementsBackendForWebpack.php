@@ -228,7 +228,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
         if ($combinedFolder) {
             // @var GeneratedAssetHandler|null $assetHandler
             $assetHandler = $this->getAssetHandler();
-            if($assetHandler) {
+            if ($assetHandler) {
                 $assetHandler->removeContent($combinedFolder);
             }
         }
