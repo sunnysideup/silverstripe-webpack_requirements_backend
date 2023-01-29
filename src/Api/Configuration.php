@@ -166,7 +166,7 @@ class Configuration
         }
 
         if ($break && Director::isDev()) {
-            user_error('Could find: ' . $fileLocation . ' based on ' . $file . ',' . $this->WebpackFolderOnFileSystem());
+            user_error('Could find: ' . $fileLocation . ' based on FOLDER: ' . $this->WebpackFolderOnFileSystem(). ' and provided file: '. $file);
         }
 
         return '';

@@ -13,23 +13,23 @@ class WebpackPageControllerExtension extends Extension
      *
      * @var string
      */
-    private static $distilled_file_base_name = 'app';
+    private static $distilled_file_base_name_css = 'main';
+    private static $distilled_file_base_name_js = 'app';
+    private static $distilled_file_base_name_js_vendor = 'runtime';
 
     public function AppCSSLocation(): string
     {
-        return $this->getWebpackFile($this->getOwner()->Config()->get('distilled_file_base_name') . '.css');
+        return $this->getWebpackFile($this->getOwner()->Config()->get('distilled_file_base_name_css') . '.css');
     }
 
     public function AppVendorJSLocation(?bool $strict = false): string
     {
-        $file = 'vendors~' . $this->getOwner()->Config()->get('distilled_file_base_name') . '.js';
-        //vendor~app.js is not included if there is no vendor stuff to be included.
-        return $this->getWebpackFile($file, false);
+        return $this->getWebpackFile($this->getOwner()->Config()->get('distilled_file_base_name_js_vendor') . '.js', false);
     }
 
     public function AppJSLocation(): string
     {
-        return $this->getWebpackFile($this->getOwner()->Config()->get('distilled_file_base_name') . '.js');
+        return $this->getWebpackFile($this->getOwner()->Config()->get('distilled_file_base_name_js') . '.js');
     }
 
     public function IsNotWebpackDevServer(): bool
