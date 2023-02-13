@@ -2,6 +2,6 @@
 <script src="$AppVendorJSLocation"></script>
 <% end_if %>
 
-<%-- <% if $AppJSLocation %>
+<% if $AppJSLocation %>
 <script src="$AppJSLocation"></script>
-<% end_if %> --%>
+<% end_if %>
