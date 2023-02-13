@@ -24,7 +24,11 @@ class WebpackPageControllerExtension extends Extension
 
     public function AppVendorJSLocation(?bool $strict = false): string
     {
-        return $this->getWebpackFile($this->getOwner()->Config()->get('distilled_file_base_name_js_vendor') . '.js', false);
+        $file = $this->getWebpackFile($this->getOwner()->Config()->get('distilled_file_base_name_js_vendor') . '.js', false);
+        if ($file === $this->AppJSLocation()) {
+            return '';
+        }
+        return $file;
     }
 
     public function AppJSLocation(): string
