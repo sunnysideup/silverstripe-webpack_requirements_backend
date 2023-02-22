@@ -19,7 +19,7 @@ class NoteRequiredFiles implements Flushable
     /**
      * @var bool
      */
-    private static $save_requirements_in_folder = false;
+    private static $save_requirements_in_folder = true;
 
     /**
      * @var string
