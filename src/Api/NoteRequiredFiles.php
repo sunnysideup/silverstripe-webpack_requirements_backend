@@ -58,7 +58,7 @@ class NoteRequiredFiles implements Flushable
                     $srcFolder . '/style.scss',
                 ];
                 foreach ($files as $file) {
-                    if (!file_exists($file)) {
+                    if (! file_exists($file)) {
                         @file_put_contents($file, '//add your customisations in this file');
                     }
                 }
@@ -117,7 +117,7 @@ class NoteRequiredFiles implements Flushable
         $themeFolderWithBase = $base . '/' . Configuration::webpack_theme_folder();
         $folderLocationWithBase = $themeFolderWithBase . '/' . $folderLocation;
         Filesystem::makeFolder($folderLocationWithBase);
-        if (!file_exists($folderLocationWithBase)) {
+        if (! file_exists($folderLocationWithBase)) {
             user_error('Please update RequirementsBackendForWebpack for the right folder or create ' . $folderLocationWithBase);
         }
 
@@ -144,7 +144,7 @@ class NoteRequiredFiles implements Flushable
                 $lines = file($fileLocation);
             }
 
-            if (!in_array($line, $lines, true)) {
+            if (! in_array($line, $lines, true)) {
                 //last catch!
                 if (is_writable($fileLocation)) {
                     $handle = fopen($fileLocation, 'a');
