@@ -96,7 +96,7 @@ class Configuration
         $theme = (string) Config::inst()->get(self::class, 'webpack_theme');
         if ('' === $theme) {
             $array = SSViewer::get_themes();
-            if (!empty($array)) {
+            if (! empty($array)) {
                 while ($theme && false !== strpos($theme, '$') && false !== strpos($theme, 'silverstripe/admin')) {
                     $theme = (string) array_shift($array);
                 }
@@ -121,7 +121,7 @@ class Configuration
 
     public function IsNotWebpackDevServer(): bool
     {
-        return !$this->IsWebpackDevServer();
+        return ! $this->IsWebpackDevServer();
     }
 
     public function IsWebpackDevServer(): bool
@@ -165,7 +165,7 @@ class Configuration
             }
         }
         $filenameWithoutExtension = pathinfo($file, PATHINFO_FILENAME);
-        if ($filenameWithoutExtension !== 'app') {
+        if ('app' !== $filenameWithoutExtension) {
             return $this->getWebpackFile(str_replace($filenameWithoutExtension, 'app', $file), $break);
         }
         if ($break && Director::isDev()) {
