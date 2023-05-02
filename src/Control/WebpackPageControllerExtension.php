@@ -9,7 +9,7 @@ use Sunnysideup\WebpackRequirementsBackend\Api\Configuration;
 /**
  * Class \Sunnysideup\WebpackRequirementsBackend\Control\WebpackPageControllerExtension
  *
- * @property ContentController|WebpackPageControllerExtension $owner
+ * @property \SilverStripe\CMS\Controllers\ContentController|\Sunnysideup\WebpackRequirementsBackend\Control\WebpackPageControllerExtension $owner
  */
 class WebpackPageControllerExtension extends Extension
 {
