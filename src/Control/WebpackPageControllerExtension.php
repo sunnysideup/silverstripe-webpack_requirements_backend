@@ -7,7 +7,7 @@ use SilverStripe\Core\Injector\Injector;
 use Sunnysideup\WebpackRequirementsBackend\Api\Configuration;
 
 /**
- * Class \Sunnysideup\WebpackRequirementsBackend\Control\WebpackPageControllerExtension
+ * Class \Sunnysideup\WebpackRequirementsBackend\Control\WebpackPageControllerExtension.
  *
  * @property ContentController|WebpackPageControllerExtension $owner
  */
