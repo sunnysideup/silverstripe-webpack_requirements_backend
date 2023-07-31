@@ -123,7 +123,7 @@ class NoteRequiredFiles implements Flushable
 
         if (false !== strpos($fileLocation, '//')) {
             $logFile = $folderLocationWithBase . '/TO.INCLUDE.FROM.PAGE.SS.FILE.log';
-            $line = $_SERVER['REQUEST_URI'] . ' | ' . $fileLocation;
+            $line = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL) . ' | ' . $fileLocation;
             $this->addLinesToFile($logFile, $fileLocation);
         } else {
             $from = $fileLocation;
