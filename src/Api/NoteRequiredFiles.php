@@ -19,7 +19,7 @@ class NoteRequiredFiles implements Flushable
     /**
      * @var bool
      */
-    private static $save_requirements_in_folder = false;
+    private static $save_requirements_in_folder = true;
 
     /**
      * @var string
@@ -123,7 +123,7 @@ class NoteRequiredFiles implements Flushable
 
         if (false !== strpos($fileLocation, '//')) {
             $logFile = $folderLocationWithBase . '/TO.INCLUDE.FROM.PAGE.SS.FILE.log';
-            $line = $_SERVER['REQUEST_URI'] . ' | ' . $fileLocation;
+            $line = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL) . ' | ' . $fileLocation;
             $this->addLinesToFile($logFile, $fileLocation);
         } else {
             $from = $fileLocation;
@@ -153,7 +153,10 @@ class NoteRequiredFiles implements Flushable
                     echo '
                     <br />
                     Please run something like: <br />
-                    sudo touch ' . $fileLocation . ' && sudo chown www-data ' . $fileLocation . ' && sudo chmod 0775 ' . $fileLocation . '';
+                    sudo mkdir -p ' . dirname($fileLocation) . ';
+                    sudo touch ' . $fileLocation . ';
+                    sudo chown www-data ' . $fileLocation . ';
+                    sudo chmod 0775 ' . $fileLocation . '';
                     user_error('
                         Trying to write ' . $line . ' to ' . $fileLocation . '<br />
                         ');

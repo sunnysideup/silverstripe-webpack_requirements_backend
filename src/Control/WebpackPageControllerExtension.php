@@ -6,6 +6,11 @@ use SilverStripe\Core\Extension;
 use SilverStripe\Core\Injector\Injector;
 use Sunnysideup\WebpackRequirementsBackend\Api\Configuration;
 
+/**
+ * Class \Sunnysideup\WebpackRequirementsBackend\Control\WebpackPageControllerExtension.
+ *
+ * @property ContentController|WebpackPageControllerExtension $owner
+ */
 class WebpackPageControllerExtension extends Extension
 {
     /**

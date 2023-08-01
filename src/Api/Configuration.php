@@ -164,9 +164,12 @@ class Configuration
                 return $this->WebpackFolderOnFrontEnd() . '/' . $file . '?x=' . $hash;
             }
         }
-
+        $filenameWithoutExtension = pathinfo($file, PATHINFO_FILENAME);
+        if ('app' !== $filenameWithoutExtension) {
+            return $this->getWebpackFile(str_replace($filenameWithoutExtension, 'app', $file), $break);
+        }
         if ($break && Director::isDev()) {
-            user_error('Could find: ' . $fileLocation . ' based on FOLDER: ' . $this->WebpackFolderOnFileSystem(). ' and provided file: '. $file);
+            user_error('Could not find: ' . $fileLocation . ' based on FOLDER: ' . $this->WebpackFolderOnFileSystem() . ' and provided file: ' . $file);
         }
 
         return '';
