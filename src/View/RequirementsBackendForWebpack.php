@@ -169,14 +169,14 @@ class RequirementsBackendForWebpack extends Requirements_Backend
                 }
 
                 // Remove all newlines from code to preserve layout
-                $jsRequirements = preg_replace('#>\n*#', '>', $jsRequirements);
+                $jsRequirements = preg_replace('#>\n*#', '>', (string) $jsRequirements);
 
                 // Forcefully put the scripts at the bottom of the body instead of before the first
                 // script tag.
-                $content = preg_replace('#(<\\/body[^>]*>)#i', $jsRequirements . '\\1', $content);
+                $content = preg_replace('#(<\\/body[^>]*>)#i', $jsRequirements . '\\1', (string) $content);
 
                 // Put CSS at the bottom of the head
-                $content = preg_replace('#(<\\/head>)#i', $requirements . '\\1', $content);
+                $content = preg_replace('#(<\\/head>)#i', $requirements . '\\1', (string) $content);
 
                 //end copy-ish from parent class
                 //=====================================================================
