@@ -94,20 +94,24 @@ class Configuration
     public static function get_theme_for_webpack(): string
     {
         $theme = (string) Config::inst()->get(self::class, 'webpack_theme');
-        if ('' === $theme) {
+        if (empty($theme)) {
             $array = SSViewer::get_themes();
             if (! empty($array)) {
-                while ($theme && false !== strpos($theme, '$') && false !== strpos($theme, 'silverstripe/admin')) {
-                    $theme = (string) array_shift($array);
+                foreach($array as $theme) {
+                    if($theme && false !== strpos($theme, '$') && false !== strpos($theme, 'silverstripe/admin')) {
+                        break;
+                    } else {
+                        $theme = '';
+                    }
                 }
             }
         }
 
-        if ('' === $theme) {
+        if (empty($theme)) {
             $theme = (string) Config::inst()->get(SSViewer::class, 'theme');
         }
 
-        if ('' === $theme) {
+        if (empty($theme)) {
             user_error('<pre>please set webpack theme: ' . self::class . '::webpack_theme: [your theme here] (add to yml file).');
         }
 
