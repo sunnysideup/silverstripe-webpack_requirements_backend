@@ -1,8 +1,25 @@
 ---
 Name: webpack_requirements_backend
 ---
-
-
 SilverStripe\CMS\Controllers\ContentController:
-    extensions:
-      - Sunnysideup\WebpackRequirementsBackend\Control\WebpackPageControllerExtension
+  extensions:
+    - Sunnysideup\WebpackRequirementsBackend\Control\WebpackPageControllerExtension
+
+Sunnysideup\WebpackRequirementsBackend\View\RequirementsBackendForWebpack:
+  files_to_ignore:
+    - 'vendor/silverstripe/admin/client/dist/styles/bundle.css'
+    - 'vendor/silverstripe/login-forms/client/dist/styles/bundle.css'
+    - 'vendor/undefinedoffset/silverstripe-nocaptcha/javascript/NocaptchaField.js'
+    - 'vendor/silverstripe/totp-authenticator/client/dist/js/bundle.js'
+    - 'vendor/silverstripe/webauthn-authenticator/client/dist/js/bundle.js'
+    - 'vendor/silverstripe/admin/client/dist/js/i18n.js'
+    - 'vendor/silverstripe/mfa/client/lang/en.js'
+    - 'vendor/silverstripe/mfa/client/dist/js/bundle.js'
+    - 'vendor/silverstripe/login-forms/client/dist/js/bundle.js'
+    - 'vendor/silverstripe/mfa/client/dist/js/injector.js'
+    - 'vendor/silverstripe/totp-authenticator/client/dist/styles/bundle.css'
+    - 'vendor/silverstripe/webauthn-authenticator/client/dist/styles/bundle.css'
+    - 'vendor/silverstripe/mfa/client/dist/styles/bundle.css'
+    - 'vendor/silverstripe/admin/client/dist/styles/bundle.css'
+    - 'vendor/silverstripe/login-forms/client/dist/styles/bundle.css'
+    - 'vendor/silverstripe/login-forms/client/dist/styles/darkmode.css'
