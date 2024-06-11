@@ -150,16 +150,21 @@ class NoteRequiredFiles implements Flushable
                     $handle = fopen($fileLocation, 'a');
                     fwrite($handle, $line);
                 } else {
-                    echo '
-                    <br />
+                    $error = '<br />
                     Please run something like: <br />
                     sudo mkdir -p ' . dirname($fileLocation) . ';
                     sudo touch ' . $fileLocation . ';
                     sudo chown www-data ' . $fileLocation . ';
                     sudo chmod 0775 ' . $fileLocation . '';
+
                     user_error('
                         Trying to write ' . $line . ' to ' . $fileLocation . '<br />
-                        ');
+                        but the file is not writable. <br />
+                        ' . $error . '<br />
+                    ');
+                    if(Director::isDev()) {
+                        die('please fix first.');
+                    }
                 }
             }
         } catch (Exception $exception) {
