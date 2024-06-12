@@ -76,17 +76,7 @@ class NoteRequiredFiles implements Flushable
 
     public static function can_save_requirements(): bool
     {
-        if (Director::isDev()) {
-            if (Config::inst()->get(self::class, 'save_requirements_in_folder')) {
-                if (RequirementsBackendForWebpack::is_themed_request()) {
-                    if ('' !== Configuration::get_theme_for_webpack()) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
+        return Director::isDev() && Config::inst()->get(self::class, 'save_requirements_in_folder') && (RequirementsBackendForWebpack::is_themed_request() && '' !== Configuration::get_theme_for_webpack());
     }
 
     public function noteFileRequired(string $fileLocation, string $type = '')
@@ -162,7 +152,7 @@ class NoteRequiredFiles implements Flushable
                         but the file is not writable. <br />
                         ' . $error . '<br />
                     ');
-                    if(Director::isDev()) {
+                    if (Director::isDev()) {
                         die('please fix first.');
                     }
                 }

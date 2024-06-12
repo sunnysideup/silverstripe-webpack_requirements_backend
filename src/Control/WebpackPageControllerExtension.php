@@ -19,7 +19,9 @@ class WebpackPageControllerExtension extends Extension
      * @var string
      */
     private static $distilled_file_base_name_css = 'main';
+
     private static $distilled_file_base_name_js = 'app';
+
     private static $distilled_file_base_name_js_vendor = 'runtime';
 
     public function AppCSSLocation(): string

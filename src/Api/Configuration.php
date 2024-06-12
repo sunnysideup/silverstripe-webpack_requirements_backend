@@ -94,11 +94,11 @@ class Configuration
     public static function get_theme_for_webpack(): string
     {
         $theme = (string) Config::inst()->get(self::class, 'webpack_theme');
-        if (empty($theme)) {
+        if ($theme === '' || $theme === '0') {
             $array = SSViewer::get_themes();
             if (! empty($array)) {
-                foreach($array as $theme) {
-                    if($theme && false !== strpos($theme, '$') && false !== strpos($theme, 'silverstripe/admin')) {
+                foreach ($array as $theme) {
+                    if ($theme && false !== strpos($theme, '$') && false !== strpos($theme, 'silverstripe/admin')) {
                         break;
                     } else {
                         $theme = '';
@@ -170,7 +170,7 @@ class Configuration
         }
         $filenameWithoutExtension = pathinfo($file, PATHINFO_FILENAME);
         if ('app' !== $filenameWithoutExtension) {
-            return $this->getWebpackFile(str_replace($filenameWithoutExtension, 'app', (string) $file), $break);
+            return $this->getWebpackFile(str_replace($filenameWithoutExtension, 'app', $file), $break);
         }
         if ($break && Director::isDev()) {
             user_error('Could not find: ' . $fileLocation . ' based on FOLDER: ' . $this->WebpackFolderOnFileSystem() . ' and provided file: ' . $file);

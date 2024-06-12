@@ -169,7 +169,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
                 }
 
                 // Remove all newlines from code to preserve layout
-                $jsRequirements = preg_replace('#>\n*#', '>', (string) $jsRequirements);
+                $jsRequirements = preg_replace('#>\n*#', '>', $jsRequirements);
 
                 // Forcefully put the scripts at the bottom of the body instead of before the first
                 // script tag.
@@ -215,24 +215,19 @@ class RequirementsBackendForWebpack extends Requirements_Backend
 
         //$this->process_combined_files();
         //do nothing ...
+        return null;
     }
 
     public static function is_themed_request(): bool
     {
-        if (Config::inst()->get(SSViewer::class, 'theme_enabled')
-            &&
-            Config::inst()->get(Configuration::class, 'enabled')
-        ) {
-            if (Controller::has_curr()) {
-                $controller = Controller::curr();
-                foreach (Config::inst()->get(static::class, 'classes_to_exclude') as $class) {
-                    if ($controller instanceof $class) {
-                        return false;
-                    }
+        if (Config::inst()->get(SSViewer::class, 'theme_enabled') && Config::inst()->get(Configuration::class, 'enabled') && Controller::has_curr()) {
+            $controller = Controller::curr();
+            foreach (Config::inst()->get(static::class, 'classes_to_exclude') as $class) {
+                if ($controller instanceof $class) {
+                    return false;
                 }
-
-                return ! $controller instanceof LeftAndMain && ! $controller instanceof TaskRunner;
             }
+            return ! $controller instanceof LeftAndMain && ! $controller instanceof TaskRunner;
         }
 
         return false;
