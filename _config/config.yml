@@ -23,3 +23,5 @@ Sunnysideup\WebpackRequirementsBackend\View\RequirementsBackendForWebpack:
     - 'vendor/silverstripe/admin/client/dist/styles/bundle.css'
     - 'vendor/silverstripe/login-forms/client/dist/styles/bundle.css'
     - 'vendor/silverstripe/login-forms/client/dist/styles/darkmode.css'
+    - 'vendor/sunnysideup/elemental-edit-me-button/client/AddCanEditButton.js'
+    - 'vendor/sunnysideup/elemental-edit-me-button/client/AddCanEditButton.css'
