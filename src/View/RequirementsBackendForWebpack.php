@@ -46,33 +46,11 @@ class RequirementsBackendForWebpack extends Requirements_Backend
 
     /**
      * e.g. /app/javascript/test.js.
+     * see: vendor/sunnysideup/webpack_requirements_backend/_config/config.yml
      *
      * @var array
      */
-    private static $files_to_ignore = [
-        'vendor/silverstripe/admin/client/dist/styles/bundle.css',
-        'vendor/silverstripe/login-forms/client/dist/styles/bundle.css',
-        // no-catcha
-        'vendor/undefinedoffset/silverstripe-nocaptcha/javascript/NocaptchaField.js',
-        // debug bar
-        'vendor/lekoala/silverstripe-debugbar/assets/vendor/font-awesome/css/font-awesome.min.css',
-        'vendor/lekoala/silverstripe-debugbar/assets/vendor/highlightjs/styles/github.css',
-        'vendor/lekoala/silverstripe-debugbar/assets/debugbar.css',
-        'vendor/lekoala/silverstripe-debugbar/assets/widgets.css',
-        'vendor/lekoala/silverstripe-debugbar/assets/openhandler.css',
-        'vendor/lekoala/silverstripe-debugbar/javascript/sqlqueries/widget.css',
-        'vendor/lekoala/silverstripe-debugbar/javascript/config/widget.css',
-        'vendor/lekoala/silverstripe-debugbar/assets/widgets/mails/widget.css',
-        'vendor/lekoala/silverstripe-debugbar/assets/vendor/jquery/dist/jquery.min.js',
-        'vendor/lekoala/silverstripe-debugbar/assets/vendor/highlightjs/highlight.pack.js',
-        'vendor/lekoala/silverstripe-debugbar/assets/debugbar.js',
-        'vendor/lekoala/silverstripe-debugbar/assets/widgets.js',
-        'vendor/lekoala/silverstripe-debugbar/assets/openhandler.js',
-        'vendor/lekoala/silverstripe-debugbar/javascript/sqlqueries/widget.js',
-        'vendor/lekoala/silverstripe-debugbar/javascript/widgets.js',
-        'vendor/lekoala/silverstripe-debugbar/javascript/config/widget.js',
-        'vendor/lekoala/silverstripe-debugbar/assets/widgets/mails/widget.js',
-    ];
+    private static $files_to_ignore = [];
 
     /**
      * @var array
