@@ -39,7 +39,7 @@ You can also exclude files from being blocked so that they can be included as pe
 
 
 add this to your yml:
-```
+```yml
 Sunnysideup\WebpackRequirementsBackend\View\RequirementsBackendForWebpack:
   files_to_ignore:
     - vendor/team/package/dir/file1.js
