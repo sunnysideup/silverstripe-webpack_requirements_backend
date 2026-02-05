@@ -6,39 +6,20 @@ SilverStripe\CMS\Controllers\ContentController:
     - Sunnysideup\WebpackRequirementsBackend\Control\WebpackPageControllerExtension
 
 Sunnysideup\WebpackRequirementsBackend\View\RequirementsBackendForWebpack:
+  domains_to_ignore:
+    - "fonts.googleapis.com"
+    - "maps.googleapis.com"
+  files_starts_with_ignore:
+    - vendor/silverstripe/userforms/client
+    - vendor/undefinedoffset/silverstripe-nocaptcha
+    - vendor/silverstripe/login-forms
+    - vendor/silverstripe/mfa
+    - vendor/silverstripe/admin
+    - vendor/lekoala/silverstripe-debugbar
+    - vendor/silverstripe/webauthn-authenticator
   files_to_ignore:
     #js
-    - "vendor/lekoala/silverstripe-debugbar/assets/vendor/jquery/dist/jquery.min.js"
-    - "vendor/lekoala/silverstripe-debugbar/assets/vendor/highlightjs/highlight.pack.js"
-    - "vendor/lekoala/silverstripe-debugbar/assets/debugbar.js"
-    - "vendor/lekoala/silverstripe-debugbar/assets/widgets.js"
-    - "vendor/lekoala/silverstripe-debugbar/assets/openhandler.js"
-    - "vendor/lekoala/silverstripe-debugbar/javascript/sqlqueries/widget.js"
-    - "vendor/lekoala/silverstripe-debugbar/javascript/widgets.js"
-    - "vendor/lekoala/silverstripe-debugbar/javascript/config/widget.js"
-    - "vendor/lekoala/silverstripe-debugbar/assets/widgets/mails/widget.js"
-    - "vendor/silverstripe/admin/client/dist/js/i18n.js"
-    - "vendor/silverstripe/login-forms/client/dist/js/bundle.js"
-    - "vendor/silverstripe/mfa/client/lang/en.js"
-    - "vendor/silverstripe/mfa/client/dist/js/bundle.js"
-    - "vendor/silverstripe/mfa/client/dist/js/injector.js"
-    - "vendor/silverstripe/totp-authenticator/client/dist/js/bundle.js"
-    - "vendor/silverstripe/webauthn-authenticator/client/dist/js/bundle.js"
     - "vendor/sunnysideup/elemental-edit-me-button/client/AddCanEditButton.js"
     - "vendor/undefinedoffset/silverstripe-nocaptcha/javascript/NocaptchaField.js"
     # css
-    - "vendor/lekoala/silverstripe-debugbar/assets/vendor/font-awesome/css/font-awesome.min.css"
-    - "vendor/lekoala/silverstripe-debugbar/assets/vendor/highlightjs/styles/github.css"
-    - "vendor/lekoala/silverstripe-debugbar/assets/debugbar.css"
-    - "vendor/lekoala/silverstripe-debugbar/assets/widgets.css"
-    - "vendor/lekoala/silverstripe-debugbar/assets/openhandler.css"
-    - "vendor/lekoala/silverstripe-debugbar/javascript/sqlqueries/widget.css"
-    - "vendor/lekoala/silverstripe-debugbar/javascript/config/widget.css"
-    - "vendor/lekoala/silverstripe-debugbar/assets/widgets/mails/widget.css"
-    - "vendor/silverstripe/admin/client/dist/styles/bundle.css"
-    - "vendor/silverstripe/mfa/client/dist/styles/bundle.css"
-    - "vendor/silverstripe/login-forms/client/dist/styles/bundle.css"
-    - "vendor/silverstripe/login-forms/client/dist/styles/darkmode.css"
-    - "vendor/silverstripe/totp-authenticator/client/dist/styles/bundle.css"
-    - "vendor/silverstripe/webauthn-authenticator/client/dist/styles/bundle.css"
     - "vendor/sunnysideup/elemental-edit-me-button/client/AddCanEditButton.css"

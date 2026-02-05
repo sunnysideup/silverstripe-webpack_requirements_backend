@@ -44,4 +44,8 @@ Sunnysideup\WebpackRequirementsBackend\View\RequirementsBackendForWebpack:
   files_to_ignore:
     - vendor/team/package/dir/file1.js
     - vendor/team/package/dir/file2.js
+  domains_to_ignore: 
+    - maps.googleapis.com
+  files_starts_with_ignore: 
+    - vendor/silvestripe/
 ```

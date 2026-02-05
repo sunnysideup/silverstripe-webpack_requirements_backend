@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\WebpackRequirementsBackend\View;
 
 use SilverStripe\Admin\LeftAndMain;
@@ -28,21 +30,21 @@ class RequirementsBackendForWebpack extends Requirements_Backend
      *
      * @var bool
      */
-    protected $suffix_requirements = false;
+    protected bool $suffix_requirements = false;
 
     /**
      * Whether to combine CSS and JavaScript files.
      *
      * @var bool
      */
-    protected $combined_files_enabled = false;
+    protected bool $combined_files_enabled = false;
 
     /**
      * Force the JavaScript to the bottom of the page, even if there's a script tag in the body already.
      *
      * @var bool
      */
-    protected $force_js_to_bottom = true;
+    protected bool $force_js_to_bottom = true;
 
     /**
      * e.g. /app/javascript/test.js.
@@ -50,24 +52,29 @@ class RequirementsBackendForWebpack extends Requirements_Backend
      *
      * @var array
      */
-    private static $files_to_ignore = [];
+    private static array $files_to_ignore = [];
+
+    private static array $files_starts_with_ignore = [];
+
+
+    /**
+     * e.g. "google.com", "fonts.googleapis.com", "use.fontawesome.com".
+     *
+     * @var array
+     */
+    private static array $domains_to_ignore = [];
 
     /**
      * @var array
      */
-    private static $urls_to_exclude = [];
+    private static array $urls_to_exclude = [];
 
     /**
      * @var array
      */
-    private static $classes_to_exclude = [
-        'SilverStripe\\UserForms\\Control\\UserDefinedFormController',
+    private static array $classes_to_exclude = [
+        // 'SilverStripe\\UserForms\\Control\\UserDefinedFormController',
     ];
-
-    /**
-     * @var bool
-     */
-    private static $force_update = true;
 
     /**
      * @param string $content
@@ -80,121 +87,61 @@ class RequirementsBackendForWebpack extends Requirements_Backend
             //=====================================================================
             // start copy-ish from parent class
 
-            $hasHead = false !== strpos($content, '</head>') || false !== strpos($content, '</head ');
-            $hasRequirements = $this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags;
-            if ($hasHead && $hasRequirements) {
-                $requirements = '';
-                $jsRequirements = '';
-                $requirementsCSSFiles = [];
-                $requirementsJSFiles = [];
+            $requirementsCSSFiles = [];
+            $requirementsJSFiles = [];
 
-                // Combine files - updates $this->javascript and $this->css
-                $this->processCombinedFiles();
-                $isDev = Director::isDev();
-                $toIgnore = $this->Config()->get('files_to_ignore');
-                foreach (array_keys(array_diff_key($this->javascript, $this->blocked)) as $file) {
-                    $ignore = in_array($file, $toIgnore, true);
-                    if ($isDev || $ignore) {
+            // Combine files - updates $this->javascript and $this->css
+            $this->processCombinedFiles();
+            $isDev = Director::isDev();
+            $toIgnore = $this->Config()->get('files_to_ignore');
+            foreach ($this->getJavascript() as $file => $params) {
+                $ignore = in_array($file, $toIgnore, true)
+                    || $this->shouldDomainBeIgnored($file)
+                    || $this->shouldStartsWithBeIgnored($file);
+                if ($ignore) {
+                    if ($isDev) {
                         $path = Convert::raw2xml($this->pathForFile($file));
                         if ($path) {
-                            if ($isDev) {
-                                $requirementsJSFiles[$path] = $path;
-                            }
-
-                            if ($ignore) {
-                                $jsRequirements .= "<script type=\"text/javascript\" src=\"{$path}\"></script>\n";
-                            }
+                            $requirementsJSFiles[$path] =  $path . '__' . json_encode($params);
                         }
                     }
-                }
-
-                // Add all inline JavaScript *after* including external files they might rely on
-                if ($this->customScript) {
-                    foreach (array_diff_key($this->customScript, $this->blocked) as $script) {
-                        $jsRequirements .= "<script type=\"text/javascript\">\n//<![CDATA[\n";
-                        $jsRequirements .= "{$script}\n";
-                        $jsRequirements .= "\n//]]>\n</script>\n";
-                    }
-                }
-
-                foreach (array_diff_key($this->css, $this->blocked) as $file => $params) {
-                    $ignore = in_array($file, $this->Config()->get('files_to_ignore'), true);
-                    if ($isDev || $ignore) {
-                        $path = Convert::raw2xml($this->pathForFile($file));
-                        if ($path) {
-                            $media = isset($params['media']) && ! empty($params['media']) ? $params['media'] : '';
-                            if ($isDev) {
-                                $requirementsCSSFiles[$path . '_' . $media] = $path;
-                            }
-
-                            if ($ignore) {
-                                if ('' !== $media) {
-                                    $media = " media=\"{$media}\"";
-                                }
-
-                                $requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"{$path}\" />\n";
-                            }
-                        }
-                    }
-                }
-
-                foreach (array_diff_key($this->customCSS, $this->blocked) as $css) {
-                    $requirements .= "<style type=\"text/css\">\n{$css}\n</style>\n";
-                }
-
-                foreach (array_diff_key($this->customHeadTags, $this->blocked) as $customHeadTag) {
-                    $requirements .= "{$customHeadTag}\n";
-                }
-
-                // Remove all newlines from code to preserve layout
-                $jsRequirements = preg_replace('#>\n*#', '>', $jsRequirements);
-
-                // Forcefully put the scripts at the bottom of the body instead of before the first
-                // script tag.
-                $content = preg_replace('#(<\\/body[^>]*>)#i', $jsRequirements . '\\1', (string) $content);
-
-                // Put CSS at the bottom of the head
-                $content = preg_replace('#(<\\/head>)#i', $requirements . '\\1', (string) $content);
-
-                //end copy-ish from parent class
-                //=====================================================================
-
-                //copy files ...
-                if (NoteRequiredFiles::can_save_requirements()) {
-                    //css
-                    foreach ($requirementsCSSFiles as $cssFile) {
-                        Injector::inst()->get(NoteRequiredFiles::class)->noteFileRequired($cssFile, 'css');
-                    }
-
-                    //js
-                    foreach ($requirementsJSFiles as $jsFile) {
-                        Injector::inst()->get(NoteRequiredFiles::class)->noteFileRequired($jsFile, 'js');
-                    }
+                } else {
+                    $this->unsetJavascript($file);
                 }
             }
 
-            return $content;
+            foreach ($this->getCSS() as $file => $params) {
+                $ignore = in_array($file, $toIgnore, true)
+                    || $this->shouldDomainBeIgnored($file)
+                    || $this->shouldStartsWithBeIgnored($file);
+                if ($ignore) {
+                    if ($isDev) {
+                        $path = Convert::raw2xml($this->pathForFile($file));
+                        if ($path) {
+                            $requirementsCSSFiles[$path] = $path . '__' . json_encode($params);
+                        }
+                    }
+                } else {
+                    $this->unsetCSS($file);
+                }
+            }
+            //copy files ...
+            if (NoteRequiredFiles::can_save_requirements()) {
+                //css
+                foreach ($requirementsCSSFiles as $cssFile) {
+                    Injector::inst()->get(NoteRequiredFiles::class)->noteFileRequired($cssFile, 'css');
+                }
+
+                //js
+                foreach ($requirementsJSFiles as $jsFile) {
+                    Injector::inst()->get(NoteRequiredFiles::class)->noteFileRequired($jsFile, 'js');
+                }
+            }
         }
 
         return parent::includeInHTML($content);
     }
 
-    /**
-     * Attach requirements inclusion to X-Include-JS and X-Include-CSS headers on the given
-     * HTTP Response.
-     */
-    public function includeInResponse(HTTPResponse $response)
-    {
-        if (self::is_themed_request()) {
-            //do nothing
-        } else {
-            return parent::includeInResponse($response);
-        }
-
-        //$this->process_combined_files();
-        //do nothing ...
-        return null;
-    }
 
     public static function is_themed_request(): bool
     {
@@ -218,11 +165,29 @@ class RequirementsBackendForWebpack extends Requirements_Backend
     {
         $combinedFolder = $this->getCombinedFilesFolder();
         if ($combinedFolder) {
-            // @var GeneratedAssetHandler|null $assetHandler
-            $assetHandler = $this->getAssetHandler();
-            if ($assetHandler) {
-                $assetHandler->removeContent($combinedFolder);
+            $this->getAssetHandler()->removeContent($combinedFolder);
+        }
+    }
+
+    protected function shouldDomainBeIgnored($file): bool
+    {
+        $toIgnoreDomains = $this->Config()->get('domains_to_ignore');
+        foreach ($toIgnoreDomains as $domain) {
+            if (str_contains($file, '//' . $domain . '/')) {
+                return true;
             }
         }
+        return false;
+    }
+
+    protected function shouldStartsWithBeIgnored($file): bool
+    {
+        $startsWith = $this->Config()->get('files_starts_with_ignore');
+        foreach ($startsWith as $start) {
+            if (strpos($file, $start) === 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }

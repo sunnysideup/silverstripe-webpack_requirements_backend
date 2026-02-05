@@ -117,7 +117,7 @@ class NoteRequiredFiles implements Flushable
             $this->addLinesToFile($logFile, $fileLocation);
         } else {
             $from = $fileLocation;
-            $line = "@import 'PROJECT_ROOT" . $from . "'";
+            $line = "@import 'PROJECT_ROOT_DIR" . $from . "'";
             $logFile = $folderLocationWithBase . '/TO.INCLUDE.USING.WEBPACK.METHODS.log';
             $this->addLinesToFile($logFile, $line);
         }
