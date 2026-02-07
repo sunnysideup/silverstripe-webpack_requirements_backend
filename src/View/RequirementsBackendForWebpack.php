@@ -7,7 +7,6 @@ namespace Sunnysideup\WebpackRequirementsBackend\View;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
@@ -48,7 +47,6 @@ class RequirementsBackendForWebpack extends Requirements_Backend
 
     private static array $files_starts_with_ignore = [];
 
-
     /**
      * e.g. "google.com", "fonts.googleapis.com", "use.fontawesome.com".
      */
@@ -86,7 +84,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
                     if ($isDev) {
                         $path = Convert::raw2xml($this->pathForFile($file));
                         if ($path) {
-                            $requirementsJSFiles[$path] =  $path . '__' . json_encode($params);
+                            $requirementsJSFiles[$path] = $path . '__' . json_encode($params);
                         }
                     }
                 } else {
@@ -126,7 +124,6 @@ class RequirementsBackendForWebpack extends Requirements_Backend
         return parent::includeInHTML($content);
     }
 
-
     public static function is_themed_request(): bool
     {
         if (Config::inst()->get(SSViewer::class, 'theme_enabled') && Config::inst()->get(Configuration::class, 'enabled') && Controller::has_curr()) {
@@ -141,7 +138,6 @@ class RequirementsBackendForWebpack extends Requirements_Backend
 
         return false;
     }
-
 
     /**
      * required! not sure why....
