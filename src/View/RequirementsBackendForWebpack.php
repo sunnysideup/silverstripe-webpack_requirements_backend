@@ -52,6 +52,11 @@ class RequirementsBackendForWebpack extends Requirements_Backend
      */
     private static array $domains_to_ignore = [];
 
+    /**
+     * pages or views where we resources to be loaded
+     *
+     * @var array
+     */
     private static array $urls_to_exclude = [];
 
     private static array $classes_to_exclude = [
@@ -75,11 +80,8 @@ class RequirementsBackendForWebpack extends Requirements_Backend
             // Combine files - updates $this->javascript and $this->css
             $this->processCombinedFiles();
             $isDev = Director::isDev();
-            $toIgnore = $this->Config()->get('files_to_ignore');
             foreach ($this->getJavascript() as $file => $params) {
-                $ignore = in_array($file, $toIgnore, true)
-                    || $this->shouldDomainBeIgnored($file)
-                    || $this->shouldStartsWithBeIgnored($file);
+                $ignore = $this->shouldFileBeIgnored((string) $file);
                 if ($ignore) {
                     if ($isDev) {
                         $path = Convert::raw2xml($this->pathForFile($file));
@@ -93,9 +95,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
             }
 
             foreach ($this->getCSS() as $file => $params) {
-                $ignore = in_array($file, $toIgnore, true)
-                    || $this->shouldDomainBeIgnored($file)
-                    || $this->shouldStartsWithBeIgnored($file);
+                $ignore = $this->shouldFileBeIgnored((string) $file);
                 if ($ignore) {
                     if ($isDev) {
                         $path = Convert::raw2xml($this->pathForFile($file));
@@ -152,6 +152,24 @@ class RequirementsBackendForWebpack extends Requirements_Backend
                 $assetHandler->removeContent($combinedFolder);
             }
         }
+    }
+
+    public function shouldFileBeIgnored(string $file): bool
+    {
+        $toIgnore = $this->Config()->get('files_to_ignore');
+        if (in_array($file, $toIgnore, true)) {
+            return true;
+        }
+
+        if ($this->shouldDomainBeIgnored($file)) {
+            return true;
+        }
+
+        if ($this->shouldStartsWithBeIgnored($file)) {
+            return true;
+        }
+
+        return false;
     }
 
     protected function shouldDomainBeIgnored($file): bool

@@ -5,12 +5,14 @@ namespace Sunnysideup\WebpackRequirementsBackend\Api;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\View\SSViewer;
 
 class Configuration
 {
     use Configurable;
+    use Injectable;
 
     /**
      * @var bool

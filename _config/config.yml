@@ -10,13 +10,9 @@ Sunnysideup\WebpackRequirementsBackend\View\RequirementsBackendForWebpack:
     - "fonts.googleapis.com"
     - "maps.googleapis.com"
   files_starts_with_ignore:
-    - vendor/silverstripe/userforms/client
+    - vendor/silverstripe
     - vendor/undefinedoffset/silverstripe-nocaptcha
-    - vendor/silverstripe/login-forms
-    - vendor/silverstripe/mfa
-    - vendor/silverstripe/admin
     - vendor/lekoala/silverstripe-debugbar
-    - vendor/silverstripe/webauthn-authenticator
   files_to_ignore:
     #js
     - "vendor/sunnysideup/elemental-edit-me-button/client/AddCanEditButton.js"

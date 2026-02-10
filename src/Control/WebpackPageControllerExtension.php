@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\WebpackRequirementsBackend\Control;
 
+use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Core\Extension;
 use SilverStripe\Core\Injector\Injector;
 use Sunnysideup\WebpackRequirementsBackend\Api\Configuration;
