@@ -54,8 +54,6 @@ class RequirementsBackendForWebpack extends Requirements_Backend
 
     /**
      * pages or views where we resources to be loaded
-     *
-     * @var array
      */
     private static array $urls_to_exclude = [];
 
@@ -164,12 +162,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
         if ($this->shouldDomainBeIgnored($file)) {
             return true;
         }
-
-        if ($this->shouldStartsWithBeIgnored($file)) {
-            return true;
-        }
-
-        return false;
+        return $this->shouldStartsWithBeIgnored($file);
     }
 
     protected function shouldDomainBeIgnored($file): bool
