@@ -89,19 +89,15 @@ class NoteRequiredFiles implements Flushable
         }
 
         $folderLocation = '';
-        $type = '';
         switch ($type) {
             case 'js':
                 $folderLocation = $this->Config()->get('copy_js_to_folder');
-                $type = 'js';
                 break;
             case 'css':
                 $folderLocation = $this->Config()->get('copy_css_to_folder');
-                $type = 'css';
                 break;
             default:
                 user_error('Please make sure to set type to js or css');
-                $type = 'unknown';
                 return;
         }
 
