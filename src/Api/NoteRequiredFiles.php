@@ -76,7 +76,10 @@ class NoteRequiredFiles implements Flushable
 
     public static function can_save_requirements(): bool
     {
-        return Director::isDev() && Config::inst()->get(self::class, 'save_requirements_in_folder') && (RequirementsBackendForWebpack::is_themed_request() && '' !== Configuration::get_theme_for_webpack());
+        return Director::isDev() &&
+            Config::inst()->get(self::class, 'save_requirements_in_folder') &&
+            RequirementsBackendForWebpack::is_themed_request() &&
+            '' !== Configuration::get_theme_for_webpack();
     }
 
     public function noteFileRequired(string $fileLocation, string $type = '')
@@ -86,18 +89,19 @@ class NoteRequiredFiles implements Flushable
         }
 
         $folderLocation = '';
+        $type = '';
         switch ($type) {
             case 'js':
                 $folderLocation = $this->Config()->get('copy_js_to_folder');
-
+                $type = 'js';
                 break;
             case 'css':
                 $folderLocation = $this->Config()->get('copy_css_to_folder');
-
+                $type = 'css';
                 break;
             default:
                 user_error('Please make sure to set type to js or css');
-
+                $type = 'unknown';
                 return;
         }
 
@@ -117,9 +121,24 @@ class NoteRequiredFiles implements Flushable
             $this->addLinesToFile($logFile, $fileLocation);
         } else {
             $from = $fileLocation;
-            $line = "@import 'PROJECT_ROOT_DIR" . $from . "'";
+            $from = str_replace('_resources/', '', $from);
+            $importStatement = $this->getImportStatement($type);
+            $line = $importStatement . '/' . $from . "'";
             $logFile = $folderLocationWithBase . '/TO.INCLUDE.USING.WEBPACK.METHODS.log';
             $this->addLinesToFile($logFile, $line);
+        }
+    }
+
+    protected function getImportStatement($type)
+    {
+        switch ($type) {
+            case 'js':
+                return "import 'PROJECT_ROOT_DIR";
+            case 'css':
+                return "@import 'PROJECT_ROOT_DIR";
+            default:
+                user_error('Please make sure to set type to js or css');
+                return '';
         }
     }
 

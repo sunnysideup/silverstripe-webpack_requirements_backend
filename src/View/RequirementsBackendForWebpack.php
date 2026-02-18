@@ -77,36 +77,34 @@ class RequirementsBackendForWebpack extends Requirements_Backend
 
             // Combine files - updates $this->javascript and $this->css
             $this->processCombinedFiles();
-            $isDev = Director::isDev();
+            $canSaveRequirements = Director::isDev() && NoteRequiredFiles::can_save_requirements();
             foreach ($this->getJavascript() as $file => $params) {
                 $ignore = $this->shouldFileBeIgnored((string) $file);
-                if ($ignore) {
-                    if ($isDev) {
+                if (!$ignore) {
+                    $this->unsetJavascript($file);
+                    if ($canSaveRequirements) {
                         $path = Convert::raw2xml($this->pathForFile($file));
                         if ($path) {
                             $requirementsJSFiles[$path] = $path . '__' . json_encode($params);
                         }
                     }
-                } else {
-                    $this->unsetJavascript($file);
-                }
+                } 
             }
 
             foreach ($this->getCSS() as $file => $params) {
                 $ignore = $this->shouldFileBeIgnored((string) $file);
-                if ($ignore) {
-                    if ($isDev) {
+                if (!$ignore) {
+                    $this->unsetCSS($file);
+                    if ($canSaveRequirements) {
                         $path = Convert::raw2xml($this->pathForFile($file));
                         if ($path) {
                             $requirementsCSSFiles[$path] = $path . '__' . json_encode($params);
                         }
                     }
-                } else {
-                    $this->unsetCSS($file);
-                }
+                } 
             }
             //copy files ...
-            if (NoteRequiredFiles::can_save_requirements()) {
+            if (($canSaveRequirements) {
                 //css
                 foreach ($requirementsCSSFiles as $cssFile) {
                     Injector::inst()->get(NoteRequiredFiles::class)->noteFileRequired($cssFile, 'css');
