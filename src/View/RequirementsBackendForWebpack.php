@@ -88,7 +88,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
                             $requirementsJSFiles[$path] = $path . '__' . json_encode($params);
                         }
                     }
-                } 
+                }
             }
 
             foreach ($this->getCSS() as $file => $params) {
@@ -101,10 +101,10 @@ class RequirementsBackendForWebpack extends Requirements_Backend
                             $requirementsCSSFiles[$path] = $path . '__' . json_encode($params);
                         }
                     }
-                } 
+                }
             }
             //copy files ...
-            if (($canSaveRequirements) {
+            if ($canSaveRequirements) {
                 //css
                 foreach ($requirementsCSSFiles as $cssFile) {
                     Injector::inst()->get(NoteRequiredFiles::class)->noteFileRequired($cssFile, 'css');
