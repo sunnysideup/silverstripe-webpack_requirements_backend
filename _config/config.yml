@@ -13,9 +13,10 @@ Sunnysideup\WebpackRequirementsBackend\View\RequirementsBackendForWebpack:
     - vendor/silverstripe
     - vendor/undefinedoffset/silverstripe-nocaptcha
     - vendor/lekoala/silverstripe-debugbar
+    - vendor/atwx/silverstripe-altcha-spamprotection
+    - vendor/sunnysideup/elemental-edit-me-button
+    - vendor/undefinedoffset/silverstripe-nocaptcha
+
   files_to_ignore:
     #js
-    - "vendor/sunnysideup/elemental-edit-me-button/client/AddCanEditButton.js"
-    - "vendor/undefinedoffset/silverstripe-nocaptcha/javascript/NocaptchaField.js"
     # css
-    - "vendor/sunnysideup/elemental-edit-me-button/client/AddCanEditButton.css"
