@@ -17,6 +17,6 @@ Sunnysideup\WebpackRequirementsBackend\View\RequirementsBackendForWebpack:
     - vendor/sunnysideup/elemental-edit-me-button
     - vendor/undefinedoffset/silverstripe-nocaptcha
 
-  files_to_ignore:
+  # files_to_ignore:
     #js
     # css
