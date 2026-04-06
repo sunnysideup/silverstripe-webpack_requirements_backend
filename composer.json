@@ -1,41 +1,41 @@
 {
-    "name": "sunnysideup/webpack_requirements_backend",
-    "type": "silverstripe-vendormodule",
-    "description": "Silverstripe Module that provides an alternative to the standard Silvertripe Requirements Backend class so that your application can run webpack.",
-    "keywords": [
-        "Silverstripe-CMS",
-        "CMS",
-        "Silverstripe",
-        "requirements",
-        "webpack",
-        "javascript",
-        "theme-ing",
-        "css",
-        "back-end",
-        "front-end",
-        "npm",
-        "module bundler"
-    ],
-    "license": "BSD-3-Clause",
-    "authors": [
-        {
-            "name": "Nicolaas Francken",
-            "email": "modules@sunnysideup.co.nz",
-            "role": "lead developer"
-        }
-    ],
-    "require": {
-        "silverstripe/framework": "^4.0 || ^5.0"
-    },
-    "extra": {
-        "installer-name": "webpack_requirements_backend"
-    },
-    "suggest": {
-        "sunnysideup/sswebpack_engine_only": "Add webpack itself"
-    },
-    "autoload": {
-        "psr-4": {
-            "Sunnysideup\\WebpackRequirementsBackend\\": "src/"
-        }
+  "name": "sunnysideup/webpack_requirements_backend",
+  "type": "silverstripe-vendormodule",
+  "description": "Silverstripe Module that provides an alternative to the standard Silvertripe Requirements Backend class so that your application can run webpack.",
+  "keywords": [
+    "Silverstripe-CMS",
+    "CMS",
+    "Silverstripe",
+    "requirements",
+    "webpack",
+    "javascript",
+    "theme-ing",
+    "css",
+    "back-end",
+    "front-end",
+    "npm",
+    "module bundler"
+  ],
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Nicolaas Francken",
+      "email": "modules@sunnysideup.co.nz",
+      "role": "lead developer"
     }
+  ],
+  "require": {
+    "silverstripe/framework": "^4.0 || ^5.0"
+  },
+  "extra": {
+    "installer-name": "webpack_requirements_backend"
+  },
+  "suggest": {
+    "sunnysideup/sswebpack_engine_only": "Add webpack itself"
+  },
+  "autoload": {
+    "psr-4": {
+      "Sunnysideup\\WebpackRequirementsBackend\\": "src/"
+    }
+  }
 }
