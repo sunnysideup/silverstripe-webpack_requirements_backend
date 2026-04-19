@@ -100,7 +100,7 @@ class Configuration
             $array = SSViewer::get_themes();
             if (! empty($array)) {
                 foreach ($array as $theme) {
-                    if ($theme && false !== strpos($theme, '$') && false !== strpos($theme, 'silverstripe/admin')) {
+                    if ($theme && str_contains((string) $theme, '$') && str_contains((string) $theme, 'silverstripe/admin')) {
                         break;
                     } else {
                         $theme = '';
@@ -170,10 +170,12 @@ class Configuration
                 return $this->WebpackFolderOnFrontEnd() . '/' . $file . '?x=' . $hash;
             }
         }
+
         $filenameWithoutExtension = pathinfo($file, PATHINFO_FILENAME);
         if ('app' !== $filenameWithoutExtension) {
             return $this->getWebpackFile(str_replace($filenameWithoutExtension, 'app', $file), $break);
         }
+
         if ($break && Director::isDev()) {
             user_error('Could not find: ' . $fileLocation . ' based on FOLDER: ' . $this->WebpackFolderOnFileSystem() . ' and provided file: ' . $file);
         }

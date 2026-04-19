@@ -111,7 +111,7 @@ class NoteRequiredFiles implements Flushable
             user_error('Please update RequirementsBackendForWebpack for the right folder or create ' . $folderLocationWithBase);
         }
 
-        if (false !== strpos($fileLocation, '//')) {
+        if (str_contains($fileLocation, '//')) {
             $logFile = $folderLocationWithBase . '/TO.INCLUDE.FROM.PAGE.SS.FILE.log';
             $line = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL) . ' | ' . $fileLocation;
             $this->addLinesToFile($logFile, $fileLocation);
@@ -158,7 +158,7 @@ class NoteRequiredFiles implements Flushable
                     echo '<br />
                     Please run something like: <br />
                     =========================================================================================================
-                    sudo mkdir -p ' . dirname($fileLocation) . ';
+                    sudo mkdir -p ' . dirname((string) $fileLocation) . ';
                     sudo touch ' . $fileLocation . ';
                     sudo chown www-data ' . $fileLocation . ';
                     sudo chmod 0775 ' . $fileLocation . '
@@ -172,7 +172,7 @@ class NoteRequiredFiles implements Flushable
                     }
                 }
             }
-        } catch (Exception $exception) {
+        } catch (Exception) {
             $this->makeFolderWritable($fileLocation);
             ++$count;
             if ($count < 3) {
@@ -184,7 +184,7 @@ class NoteRequiredFiles implements Flushable
     protected function makeFolderWritable($fileLocation)
     {
         if (file_exists($fileLocation)) {
-            $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(dirname($fileLocation)));
+            $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(dirname((string) $fileLocation)));
             foreach ($iterator as $item) {
                 chmod($item, '0664');
             }
