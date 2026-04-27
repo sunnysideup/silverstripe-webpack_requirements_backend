@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sunnysideup\WebpackRequirementsBackend\View;
 
+use Override;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -66,6 +67,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
      *
      * @return string HTML content
      */
+    #[Override]
     public function includeInHTML($content)
     {
         if (self::is_themed_request()) {
@@ -103,6 +105,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
                     }
                 }
             }
+
             //copy files ...
             if ($canSaveRequirements) {
                 //css
@@ -122,13 +125,14 @@ class RequirementsBackendForWebpack extends Requirements_Backend
 
     public static function is_themed_request(): bool
     {
-        if (Config::inst()->get(SSViewer::class, 'theme_enabled') && Config::inst()->get(Configuration::class, 'enabled') && Controller::has_curr()) {
+        if (Config::inst()->get(SSViewer::class, 'theme_enabled') && Config::inst()->get(Configuration::class, 'enabled') && Controller::curr() !== null) {
             $controller = Controller::curr();
             foreach (Config::inst()->get(static::class, 'classes_to_exclude') as $class) {
                 if ($controller instanceof $class) {
                     return false;
                 }
             }
+
             return ! $controller instanceof LeftAndMain && ! $controller instanceof TaskRunner;
         }
 
@@ -138,6 +142,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
     /**
      * required! not sure why....
      */
+    #[Override]
     public function deleteAllCombinedFiles()
     {
         $combinedFolder = $this->getCombinedFilesFolder();
@@ -160,6 +165,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
         if ($this->shouldDomainBeIgnored($file)) {
             return true;
         }
+
         return $this->shouldStartsWithBeIgnored($file);
     }
 
@@ -167,10 +173,11 @@ class RequirementsBackendForWebpack extends Requirements_Backend
     {
         $toIgnoreDomains = $this->Config()->get('domains_to_ignore');
         foreach ($toIgnoreDomains as $domain) {
-            if (str_contains($file, '//' . $domain . '/')) {
+            if (str_contains((string) $file, '//' . $domain . '/')) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -178,10 +185,11 @@ class RequirementsBackendForWebpack extends Requirements_Backend
     {
         $startsWith = $this->Config()->get('files_starts_with_ignore');
         foreach ($startsWith as $start) {
-            if (strpos($file, $start) === 0) {
+            if (str_starts_with((string) $file, (string) $start)) {
                 return true;
             }
         }
+
         return false;
     }
 }
