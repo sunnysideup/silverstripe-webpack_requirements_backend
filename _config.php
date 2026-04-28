@@ -10,7 +10,7 @@ if (defined('webpack_requirements_backend_off')) {
 } else {
     $options = Config::inst()->get(Configuration::class, 'webpack_enabled_themes');
     if (0 === count($options) || in_array(Configuration::get_theme_for_webpack(), $options, true)) {
-        Requirements::set_backend(new RequirementsBackendForWebpack());
+        Requirements::set_backend(RequirementsBackendForWebpack::create());
     }
 
     unset($options);

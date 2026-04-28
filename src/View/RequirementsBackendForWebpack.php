@@ -125,7 +125,7 @@ class RequirementsBackendForWebpack extends Requirements_Backend
 
     public static function is_themed_request(): bool
     {
-        if (Config::inst()->get(SSViewer::class, 'theme_enabled') && Config::inst()->get(Configuration::class, 'enabled') && Controller::curr() !== null) {
+        if (Config::inst()->get(SSViewer::class, 'theme_enabled') && Config::inst()->get(Configuration::class, 'enabled') && Controller::curr() instanceof Controller) {
             $controller = Controller::curr();
             foreach (Config::inst()->get(static::class, 'classes_to_exclude') as $class) {
                 if ($controller instanceof $class) {

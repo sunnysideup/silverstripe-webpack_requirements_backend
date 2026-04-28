@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sunnysideup\WebpackRequirementsBackend\Test;
 
 use SilverStripe\Dev\SapphireTest;

@@ -98,7 +98,7 @@ class Configuration
         $theme = (string) Config::inst()->get(self::class, 'webpack_theme');
         if ($theme === '' || $theme === '0') {
             $array = SSViewer::get_themes();
-            if (! empty($array)) {
+            if ($array !== []) {
                 foreach ($array as $theme) {
                     if ($theme && str_contains((string) $theme, '$') && str_contains((string) $theme, 'silverstripe/admin')) {
                         break;
