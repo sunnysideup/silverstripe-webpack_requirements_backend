@@ -9,7 +9,6 @@ Sunnysideup\WebpackRequirementsBackend\View\RequirementsBackendForWebpack:
   domains_to_ignore:
     - "fonts.googleapis.com"
     - "maps.googleapis.com"
-    - "www.google.com"
   files_starts_with_ignore:
     - vendor/silverstripe
     - vendor/undefinedoffset/silverstripe-nocaptcha
