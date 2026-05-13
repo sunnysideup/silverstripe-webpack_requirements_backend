@@ -157,6 +157,9 @@ class RequirementsBackendForWebpack extends Requirements_Backend
 
     public function shouldFileBeIgnored(string $file): bool
     {
+        if(str_starts_with((string) $file, 'https://')) {
+            return true;
+        }
         $toIgnore = $this->Config()->get('files_to_ignore');
         if (in_array($file, $toIgnore, true)) {
             return true;
