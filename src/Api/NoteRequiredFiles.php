@@ -186,7 +186,10 @@ class NoteRequiredFiles implements Flushable
         if (file_exists($fileLocation)) {
             $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(dirname($fileLocation)));
             foreach ($iterator as $item) {
-                chmod($item, '0664');
+                // files only: 0664 on a folder would remove the execute (enter) permission.
+                if (is_file((string) $item)) {
+                    chmod((string) $item, 0664);
+                }
             }
         }
     }
